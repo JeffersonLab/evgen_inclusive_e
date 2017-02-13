@@ -1,0 +1,19 @@
+#here are default instllations on ifarm1401
+
+#use  root
+setenv ROOTSYS /apps/root/5.34.36/root
+setenv PATH ${ROOTSYS}/bin:${PATH}
+if (!($?LD_LIBRARY_PATH)) then
+  setenv LD_LIBRARY_PATH ${ROOTSYS}/lib
+else
+  setenv LD_LIBRARY_PATH ${ROOTSYS}/lib:${LD_LIBRARY_PATH}
+endif
+
+#using LHAPDF6
+setenv LHAPDF /work/halla/solid/apps/LHAPDF/LHAPDF-6.1.6/
+setenv LD_LIBRARY_PATH ${LHAPDF}/lib:${LD_LIBRARY_PATH}
+setenv LHAPDF_DATA_PATH ${LHAPDF}/share/LHAPDF
+
+
+
+
