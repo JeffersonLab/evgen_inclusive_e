@@ -96,20 +96,20 @@ int  main(Int_t argc, char *argv[])
 	//         user inputs for the simulation
 	//
 	//###################################################################################
-	const double lumi=0.55e39;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
+	const double lumi=0.63e39;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
 	const double E=11;   //GeV, electron beam energy
 	const int Z=1;  //target nucleus Z
 	const int A=1;  //target nucleus A   cross section is calculated per A
 	const double theta_min=0 ;  //degree, define solid angle
 	const double theta_max=50;  //degree, define solid angle
 	const double Ep_min=0;     //GeV, define momentum space
-	const double Ep_max=10;    //GeV, define momentum space
+	const double Ep_max=11;    //GeV, define momentum space
 	const double vertex_x_min=-0.25;  //cm, depend on the raster size
 	const double vertex_x_max=0.25;   //cm
 	const double vertex_y_min=-0.25;  //cm
 	const double vertex_y_max=0.25;   //cm
-	const double vertex_z_min=-20;   //cm
-	const double vertex_z_max=20;  //cm
+	const double vertex_z_min=-10;   //cm
+	const double vertex_z_max=30;  //cm
 	const int num_evt=10000;    //number of event to generate within the phase space
 	string pol_pdfset_name="NNPDFpol11_100";    //pol. pdfset name
 	string unpol_pdfset_name="CT14nlo";   // unpol. pdfset name
