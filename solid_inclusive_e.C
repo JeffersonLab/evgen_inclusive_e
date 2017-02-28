@@ -88,7 +88,7 @@ void F1F2QE09(int Z, int IA, double QSQ, double wsq, double &F1, double &F2);
 int  main(Int_t argc, char *argv[])
 {
     int filen=0;
-    if (argc !=2) return 0;
+    if (argc !=3) return 0;
     else filen=int(atof(argv[1]));
     
 	//###################################################################################
@@ -110,9 +110,11 @@ int  main(Int_t argc, char *argv[])
 	const double vertex_y_max=0.25;   //cm
 	const double vertex_z_min=-10;   //cm
 	const double vertex_z_max=30;  //cm
-	const int num_evt=10000;    //number of event to generate within the phase space
+	const int num_evt=int(atof(argv[2]));    //number of event to generate within the phase space
 	string pol_pdfset_name="NNPDFpol11_100";    //pol. pdfset name
 	string unpol_pdfset_name="CT14nlo";   // unpol. pdfset name
+// 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
+// 	string unpol_pdfset_name="cteq66";   // unpol. pdfset name		
 
 	TString name_rootfile_output=Form("gen_%i.root",filen);   // name of the rootfile to save output data
 	
@@ -223,7 +225,6 @@ int  main(Int_t argc, char *argv[])
 	T->Branch("theta",&theta, "data/D");
 	T->Branch("phi",&phi, "data/D");
 
-
 	//###################################################################################
 	//       
 	//
@@ -237,69 +238,9 @@ int  main(Int_t argc, char *argv[])
 	TRandom3 rand;
 	rand.SetSeed(0);
 
-// 	for(int i=0; i<num_evt; i++){
-// 		//uniform vx, vy, vz
-// 		vx=rand.Uniform(vertex_x_min, vertex_x_max);
-// 		vy=rand.Uniform(vertex_y_min, vertex_y_max);
-// 		vz=rand.Uniform(vertex_z_min, vertex_z_max);
-// 
-// 		//---------phase space
-// 		//uniform Ep
-// 		Ep=rand.Uniform(Ep_min, Ep_max);
-// 		//uniform phi, theta
-// 		phi=rand.Uniform(0,360);  //0 degree to 360 degree
-// 		theta=rand.Uniform(theta_min, theta_max);
-// 
-// 
-// 		double d_omiga=2*PI*(cos(theta_min*deg_to_rad) - cos(theta_max*deg_to_rad));
-// 		double d_E=Ep_max-Ep_min;
-// 
-// 		px=Ep*sin(theta*deg_to_rad)*cos(phi*deg_to_rad);
-// 		py=Ep*sin(theta*deg_to_rad)*sin(phi*deg_to_rad);
-// 		pz=Ep*cos(theta*deg_to_rad);
-// 
-// 		//calculate kinematics
-// 		double Nu=E-Ep;
-// 		Q2=4.0*E*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
-// 		W=sqrt(proton_mass*proton_mass + 2*proton_mass*Nu - Q2);
-// 		x=Q2/2/proton_mass/Nu;
-// 		y=Nu/E;
-// 
-// 		
-// 		if(x>=0 && x<=1){
-// 		
-// 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
-// 			//xs in unit of mub/GeV-sr
-// 			xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
-// 	
-// 			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-// 			
-// 			//calculate PVDIS asymmetries Abeam and AL
-// 			//proton
-// 			double A_beam_proton=calculate_proton_Abeam(unpol_pdf,  x,  Q2,  y);
-// 			double A_L_proton=calculate_proton_AL(unpol_pdf,  pol_pdf, x,  Q2,  y);
-// 			//neutron
-// 			double A_beam_neutron=calculate_neutron_Abeam(unpol_pdf,  x,  Q2,  y);
-// 			double A_L_neutron=calculate_neutron_AL(unpol_pdf,  pol_pdf, x,  Q2,  y);
-// 			// do an average for the asymmetry according to Z and A
-// 			Abeam= (Z*A_beam_proton + (A-Z)*A_beam_neutron)/A;
-// 			AL= (Z*A_L_proton + (A-Z)*A_L_neutron)/A;
-// 
-// 
-// 		
-// 		T->Fill();
-// 
-// 		//output to lund file
-// 		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
-// 		OUTPUT_lund << " \t " << "1" << " \t " << charge << " \t " << "1" << " \t " << particle_id << " \t " << "0" << " \t " << "0" << " \t " << px << " \t " << py << " \t " << pz << " \t " << Ep << " \t " << mass<<" \t " << vx  << " \t " << vy << " \t " << vz << endl;
-// 		}  // save something physical for DIS events
-// 	} //end for
+	TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
 
-	int counter_try=0,counter_good=0;
-	for(int i=0; i<1e10; i++){
-		if(counter_good>=num_evt) break;
-		counter_try++;	  
-		
+	for(int i=0; i<num_evt; i++){
 		//uniform vx, vy, vz
 		vx=rand.Uniform(vertex_x_min, vertex_x_max);
 		vy=rand.Uniform(vertex_y_min, vertex_y_max);
@@ -328,14 +269,13 @@ int  main(Int_t argc, char *argv[])
 		y=Nu/E;
 
 		
-		if(x>=0 && x<=1){	
-			counter_good++;
-			
+		if(x>=0 && x<=1){
+		
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
 			//xs in unit of mub/GeV-sr
-			xs=xs*(d_E*d_omiga);  //in unit of mub now
+			xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
 	
-			rate_pre = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
+			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
 			
 			//calculate PVDIS asymmetries Abeam and AL
 			//proton
@@ -347,33 +287,96 @@ int  main(Int_t argc, char *argv[])
 			// do an average for the asymmetry according to Z and A
 			Abeam= (Z*A_beam_proton + (A-Z)*A_beam_neutron)/A;
 			AL= (Z*A_L_proton + (A-Z)*A_L_neutron)/A;
+
+
 		
 		T->Fill();
 
-		}  // save something physical for DIS events
-	} //end for		
-		
-TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
-
-// 			cout << counter_try << endl;
-		for(int i=0; i<num_evt; i++){
-		  T->GetEntry(i);	
-// 		  cout << rate_pre << "  ";
-		  rate=rate_pre/double(counter_try);
-// 		  cout << rate << "  ";		  
-		  brate->Fill();		  
 		//output to lund file
 		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
 		OUTPUT_lund << " \t " << "1" << " \t " << charge << " \t " << "1" << " \t " << particle_id << " \t " << "0" << " \t " << "0" << " \t " << px << " \t " << py << " \t " << pz << " \t " << Ep << " \t " << mass<<" \t " << vx  << " \t " << vy << " \t " << vz << endl;
-		}
-		cout << endl;
-		
-/*		for(int i=0; i<num_evt; i++){
-		  T->GetEntry(i);	
-		  cout << rate_pre << "  ";		  
-		  cout << rate << "  ";
-		}		
-		cout << endl;	*/	
+		}  // save something physical for DIS events
+	} //end for
+
+// 	int counter_try=0,counter_good=0;
+// 	for(int i=0; i<1e10; i++){
+// 		if(counter_good>=num_evt) break;
+// 		counter_try++;	  
+// 		
+// 		//uniform vx, vy, vz
+// 		vx=rand.Uniform(vertex_x_min, vertex_x_max);
+// 		vy=rand.Uniform(vertex_y_min, vertex_y_max);
+// 		vz=rand.Uniform(vertex_z_min, vertex_z_max);
+// 
+// 		//---------phase space
+// 		//uniform Ep
+// 		Ep=rand.Uniform(Ep_min, Ep_max);
+// 		//uniform phi, theta
+// 		phi=rand.Uniform(0,360);  //0 degree to 360 degree
+// 		theta=rand.Uniform(theta_min, theta_max);
+// 
+// 
+// 		double d_omiga=2*PI*(cos(theta_min*deg_to_rad) - cos(theta_max*deg_to_rad));
+// 		double d_E=Ep_max-Ep_min;
+// 
+// 		px=Ep*sin(theta*deg_to_rad)*cos(phi*deg_to_rad);
+// 		py=Ep*sin(theta*deg_to_rad)*sin(phi*deg_to_rad);
+// 		pz=Ep*cos(theta*deg_to_rad);
+// 
+// 		//calculate kinematics
+// 		double Nu=E-Ep;
+// 		Q2=4.0*E*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
+// 		W=sqrt(proton_mass*proton_mass + 2*proton_mass*Nu - Q2);
+// 		x=Q2/2/proton_mass/Nu;
+// 		y=Nu/E;
+// 
+// 		
+// 		if(x>=0 && x<=1){	
+// 			counter_good++;
+// 			
+// 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
+// 			//xs in unit of mub/GeV-sr
+// 			xs=xs*(d_E*d_omiga);  //in unit of mub now
+// 	
+// 			rate_pre = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
+// 			
+// 			//calculate PVDIS asymmetries Abeam and AL
+// 			//proton
+// 			double A_beam_proton=calculate_proton_Abeam(unpol_pdf,  x,  Q2,  y);
+// 			double A_L_proton=calculate_proton_AL(unpol_pdf,  pol_pdf, x,  Q2,  y);
+// 			//neutron
+// 			double A_beam_neutron=calculate_neutron_Abeam(unpol_pdf,  x,  Q2,  y);
+// 			double A_L_neutron=calculate_neutron_AL(unpol_pdf,  pol_pdf, x,  Q2,  y);
+// 			// do an average for the asymmetry according to Z and A
+// 			Abeam= (Z*A_beam_proton + (A-Z)*A_beam_neutron)/A;
+// 			AL= (Z*A_L_proton + (A-Z)*A_L_neutron)/A;
+// 		
+// 		T->Fill();
+// 
+// 		}  // save something physical for DIS events
+// 	} //end for		
+// 		
+// TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
+// 
+// // 			cout << counter_try << endl;
+// 		for(int i=0; i<num_evt; i++){
+// 		  T->GetEntry(i);	
+// // 		  cout << rate_pre << "  ";
+// 		  rate=rate_pre/double(counter_try);
+// // 		  cout << rate << "  ";		  
+// 		  brate->Fill();		  
+// 		//output to lund file
+// 		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
+// 		OUTPUT_lund << " \t " << "1" << " \t " << charge << " \t " << "1" << " \t " << particle_id << " \t " << "0" << " \t " << "0" << " \t " << px << " \t " << py << " \t " << pz << " \t " << Ep << " \t " << mass<<" \t " << vx  << " \t " << vy << " \t " << vz << endl;
+// 		}
+// 		cout << endl;
+// 		
+// /*		for(int i=0; i<num_evt; i++){
+// 		  T->GetEntry(i);	
+// 		  cout << rate_pre << "  ";		  
+// 		  cout << rate << "  ";
+// 		}		
+// 		cout << endl;	*/	
 
 	myfile->Write();
 	myfile->Close();
