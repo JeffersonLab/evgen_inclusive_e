@@ -41,13 +41,20 @@ You need to put ROOT and LHAPDF6 path in "setup" which has default instllations 
 ==== run it =======
 You need to put ROOT and LHAPDF6 path in "setup" which has default instllations on ifarm1401
 > source setup
->./solid_inclusive_e    
+>./solid_inclusive_e outputfilename number_of_event
 
-you will get a txt file (lund) and a rootfile outputs in the current directory
+you will get a txt file in lund format and a rootfile outputs in the current directory
+Their name would be like "gen_outputfilename.lund" and "gen_outputfilename.root"
+
+
+==== change target =================
+
+At this moment, you have to manually change target setup at the beginning of solid_inclusive_e.C
+We will add functionality to read an input file later
 
 ==== code details ==================
 
-The main code is segmented into several regions:
+The main code "solid_inclusive_e.C" is segmented into several regions:
 1. user inputs for the simulation -> define the simulation parameters
 2. load polpodf and unpolpdfs for W>3 GeV region ->user doesn't need to deal with it normally
 3. Define outputs, lund output and tree definition  -> user can modify it according to the needs
