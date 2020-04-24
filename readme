@@ -10,7 +10,8 @@ the W>3 GeV region uses world PDF sets, the LHAPDF6 interface is used
 pure C/C++ code, using CMake compiler
 
 Please send questions Yuxiang Zhao (yxzhao@jlab.org), Zhiwen Zhao (zwzhao@jlab.org)
-First checkin 2017/02/13
+2017/02/13 First checkin 
+2020/04 svn2root by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evgen/solid_inclusive_e/
 
 ==install========================
 It requires ROOT and LHAPDF6
