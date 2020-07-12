@@ -1,19 +1,16 @@
-SoLID inclusive electron generator
+====Introduction ========================
 
-This is a generator to generate inclusive electrons in the (Ep, theta) phase space.
-It's wriiten for JLab HallA SoLID, but it can have general use too.
-
+An inclusive electron generator
 The process includes QE + resonance + DIS for nucleus target with Z protons and A atoms.
 The W<3 GeV region uses Peter Bosted fit
 the W>3 GeV region uses world PDF sets, the LHAPDF6 interface is used
-
-pure C/C++ code, using CMake compiler
+refer to http://hallaweb.jlab.org/12GeV/SoLID/download/sim/talk/Inclusive_electron_generator.pdf
 
 Please send questions Yuxiang Zhao (yxzhao@jlab.org), Zhiwen Zhao (zwzhao@jlab.org)
-2017/02/13 First checkin 
 2020/04 svn2root by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evgen/solid_inclusive_e/
+2017/02/13 First checkin 
 
-==install========================
+====install========================
 It requires ROOT and LHAPDF6
 
 *** How to install LHAPDF6:******
@@ -21,39 +18,48 @@ refer to https://lhapdf.hepforge.org/install.html
 make sure boost packages are installed by checking "rpm -qa |grep boost"
 > mkdir -p LHAPDF/source
 > cd LHAPDF/source
-> wget http://www.hepforge.org/archive/lhapdf/LHAPDF-6.1.6.tar.gz"
+> wget http://www.hepforge.org/archive/lhapdf/LHAPDF-6.1.6.tar.gz
 > tar xf LHAPDF-6.1.6.tar.gz
 > cd LHAPDF-6.1.6
-> ./configure --prefix=../LHAPDF-6.1.6
+> ./configure --prefix=$PWD/../../LHAPDF-6.1.6
 > make
 > make install
-> cd ../LHAPDF-6.1.6/share/LHAPDF/
-> wget http://www.hepforge.org/archive/lhapdf/pdfsets/6/NNPDFpol11_100.tar.gz
+> cd ../../LHAPDF-6.1.6/share/LHAPDF/
+> wget http://www.hepforge.org/archive/lhapdf/pdfsets/v6.backup/6.1.6/NNPDFpol11_100.tar.gz
 > tar zxf NNPDFpol11_100.tar.gz
-> wget http://www.hepforge.org/archive/lhapdf/pdfsets/6/CT14nlo.tar.gz
+> wget http://www.hepforge.org/archive/lhapdf/pdfsets/v6.backup/6.1.6/CT14nlo.tar.gz
 > tar zxf CT14nlo.tar.gz
-****************************
+> wget http://www.hepforge.org/archive/lhapdf/pdfsets/v6.backup/6.1.6/CT14lo.tar.gz
+> tar zxf CT14lo.tar.gz
+> wget http://www.hepforge.org/archive/lhapdf/pdfsets/v6.backup/6.1.6/cteq66.tar.gz
+> tar zxf cteq66.tar.gz
 
-You need to put ROOT and LHAPDF6 path in "setup" which has default instllations on ifarm1401
+*** How to compile it ******
+You need to put your ROOT and LHAPDF6 path in "setup" which has the default installation on ifarm1901
+
 >source setup
 >cmake .
 >make
 
 ==== run it =======
-You need to put ROOT and LHAPDF6 path in "setup" which has default instllations on ifarm1401
+You need to put ROOT and LHAPDF6 path in "setup" which has the default installation on ifarm1901
+
 > source setup
 >./solid_inclusive_e outputfilename number_of_event
 
 you will get a txt file in lund format and a rootfile outputs in the current directory
 Their name would be like "gen_outputfilename.lund" and "gen_outputfilename.root"
 
-
-==== change target =================
+==== change target and pdf =================
 
 At this moment, you have to manually change target setup at the beginning of solid_inclusive_e.C
+
+And you can change pdf there also
+
 We will add functionality to read an input file later
 
 ==== code details ==================
+pure C/C++ code, using CMake compiler
 
 The main code "solid_inclusive_e.C" is segmented into several regions:
 1. user inputs for the simulation -> define the simulation parameters
@@ -120,7 +126,7 @@ double calculate_proton_Abeam(PDF* unpol_pdf, double x, double Q2, double y);
 
 double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep, PDF* unpol_pdf);
 
-//Peter Bostd model
+//Peter Bosted model
 int F1F2IN09(int Z, int IA, double qsq, double wsq, double &F1, double &F2, double &Rc);
 
 // Peter Bosted model
