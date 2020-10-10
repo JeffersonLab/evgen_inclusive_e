@@ -24,6 +24,15 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 set(LHAPDF "$ENV{LHAPDF}")
 #set(LHAPDF "/work/halla/solid/apps/LHAPDF/LHAPDF-6.1.6/") 
 
+#----------------------------------------------------------------------------
+# add boost libraries
+find_package(Boost REQUIRED) 
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS}) 
+endif()
+
+#----------------------------------------------------------------------------
 #debugging symbols, complains
 set(CMAKE_CXX_FLAGS "-g -Wall")
 
@@ -45,7 +54,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
 # Add the executable
 #
 add_executable(solid_inclusive_e solid_inclusive_e.C ${sources} ${headers})
-target_link_libraries(solid_inclusive_e ${ROOT_LIBRARIES} LHAPDF)
+target_link_libraries(solid_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
 
 
 
