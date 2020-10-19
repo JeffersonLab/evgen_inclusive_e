@@ -13,13 +13,15 @@
 #include <iomanip>
 #include <cmath>
 
-#define ELECTRON_MASS 5.11e-4 // in GeV
-#define PROTON_MASS 0.938     // in GeV 
-#define PION_MASS 0.140       // in GeV 
-#define PI 3.14159265359
-#define ALPHA 1./137. 
-#define DEG_TO_RAD PI/180.
-#define HBAR_C 624.4197  // in GeV*nb^(1/2)
+#include "constants.h"
+
+// #define ELECTRON_MASS 5.11e-4 // in GeV
+// #define PROTON_MASS 0.938     // in GeV 
+// #define PION_MASS 0.140       // in GeV 
+// #define PI 3.14159265359
+// #define ALPHA 1./137. 
+// #define DEG_TO_RAD PI/180.
+// #define HBAR_C 624.4197  // in GeV*nb^(1/2)
 
 class eInclusiveCrossSection{
 
