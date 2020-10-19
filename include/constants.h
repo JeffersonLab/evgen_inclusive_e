@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_YX_H
 #define CONSTANTS_YX_H
 
+const double HBAR_C = 624.4197;  // in GeV*nb^(1/2) 
+
 const double sin2thetaW=0.232;
 
 const double gv_e=-0.5+2.0*sin2thetaW;
@@ -29,7 +31,8 @@ const double GF=1.166389E-5;       //GeV^-2
 const double alpha=1.0/137.0359895;
 const double PI=3.14159265;
 
-const double proton_mass=0.9383;  //GeV
+const double proton_mass=0.9383;  // GeV
+const double pion_mass=0.140;     // GeV
 
 const double deg_to_rad = 1.0/180.0*PI;
 

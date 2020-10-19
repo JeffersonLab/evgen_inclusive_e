@@ -14,6 +14,8 @@
 #include "neutron_DIS.h"
 #include "fixed_target_xs.h"
 
+#include "RadiativeCorrections.h"
+
 using namespace LHAPDF;
 using namespace std;
 
@@ -90,7 +92,14 @@ int  main(Int_t argc, char *argv[])
     int filen=0;
     if (argc !=3) return 0;
     else filen=int(atof(argv[1]));
-    
+   
+    // test the radiative correction class
+    std::cout << "Creating RadiativeCorrection object..." << std::endl; 
+    RadiativeCorrections *myRC = new RadiativeCorrections(); 
+    std::cout << "--> Done!" << std::endl;
+    delete myRC; 
+    std::cout << "--> Deleted RC object" << std::endl;
+ 
 	//###################################################################################
 	//
 	//         user inputs for the simulation
