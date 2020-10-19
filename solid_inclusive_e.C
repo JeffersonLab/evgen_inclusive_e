@@ -200,8 +200,10 @@ int  main(Int_t argc, char *argv[])
 	double mass=0.511/1000.0;  //GeV
 	double vx=0, vy=0, vz=0;
 	double xs=0; 
+	double dXSdEdOmega_mubGeVSr=0; // differential cross section 
 	double theta=0;
 	double phi=0;
+        double Nu=0;
 	TFile *myfile=new TFile(name_rootfile_output,"RECREATE");
 	TTree *T=new TTree("T","T");
 	T->Branch("Abeam", &Abeam, "data/D");
@@ -222,8 +224,10 @@ int  main(Int_t argc, char *argv[])
 	T->Branch("vy",&vy, "data/D");
 	T->Branch("vz",&vz, "data/D");
 	T->Branch("xs",&xs, "data/D");
+	T->Branch("dXSdEdOmega_mubGeVSr",&dXSdEdOmega_mubGeVSr,"data/D");
 	T->Branch("theta",&theta, "data/D");
 	T->Branch("phi",&phi, "data/D");
+	T->Branch("nu" ,&Nu, "data/D");
 
 	//###################################################################################
 	//       
@@ -262,7 +266,7 @@ int  main(Int_t argc, char *argv[])
 		pz=Ep*cos(theta*deg_to_rad);
 
 		//calculate kinematics
-		double Nu=E-Ep;
+		Nu=E-Ep;
 		Q2=4.0*E*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
 		W=sqrt(proton_mass*proton_mass + 2*proton_mass*Nu - Q2);
 		x=Q2/2/proton_mass/Nu;
@@ -273,6 +277,7 @@ int  main(Int_t argc, char *argv[])
 		
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
 			//xs in unit of mub/GeV-sr
+			dXSdEdOmega_mubGeVSr = xs; 
 			xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
 	
 			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
