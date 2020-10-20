@@ -66,9 +66,9 @@ double RadiativeCorrections::GetPhi(double v){
 //_____________________________________________________________________________________________
 double RadiativeCorrections::GetTr(double Q2){
    // General terms
-   double M2 = ELECTRON_MASS*ELECTRON_MASS;
+   double M2 = electron_mass*electron_mass;
    // Individual terms
-   double T1 = (1.0/fb)*(ALPHA/PI);
+   double T1 = (1.0/fb)*(alpha/PI);
    double T2 = log(Q2/M2) - 1.0;
    // Put it all together 
    double Tr = T1*T2;
@@ -77,7 +77,7 @@ double RadiativeCorrections::GetTr(double Q2){
 //_____________________________________________________________________________________________
 double RadiativeCorrections::GetFTilde(double Q2){
    // General terms
-   double M2     = ELECTRON_MASS*ELECTRON_MASS;
+   double M2     = electron_mass*electron_mass;
    double PI2    = PI*PI;
    double thr    = fThDeg*deg_to_rad;
    double COS    = cos(thr/2.0);
@@ -85,9 +85,9 @@ double RadiativeCorrections::GetFTilde(double Q2){
    double SPENCE = GetSpence(COS2);
    // Individual terms 
    double T1     = 1.0 + 0.5772*fb*fT;
-   double T2     = (2.0*ALPHA/PI)*( (-14.0/9.0) + (13.0/12.0)*log(Q2/M2) );
-   double T3     = (-1.0)*(ALPHA/(2.0*PI))*log( pow(fEs/fEp,2.0) );
-   double T4     = (ALPHA/PI)*( (PI2/6.0) - SPENCE );
+   double T2     = (2.0*alpha/PI)*( (-14.0/9.0) + (13.0/12.0)*log(Q2/M2) );
+   double T3     = (-1.0)*(alpha/(2.0*PI))*log( pow(fEs/fEp,2.0) );
+   double T4     = (alpha/PI)*( (PI2/6.0) - SPENCE );
    // Put it all together
    double FTilde = T1+T2+T3+T4;
    return FTilde;
@@ -167,7 +167,7 @@ void RadiativeCorrections::CalculateB(){
 //_____________________________________________________________________________________________
 void RadiativeCorrections::CalculateXi(){
    double Z13 = pow(fZ,-1.0/3.0);
-   double T1  = PI*ELECTRON_MASS/(2.0*ALPHA);
+   double T1  = PI*electron_mass/(2.0*alpha);
    double T2  = fT/( (fZ+fEta)*log(183.0*Z13) );
    fXi        = T1*T2;
 }

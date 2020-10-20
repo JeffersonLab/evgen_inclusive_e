@@ -27,7 +27,7 @@ class RadiativeCorrections {
 
    private:
 
-      int fThreshold;  // what integration threshold? Elastic or pion? 
+      RC::thrType_t fThreshold;  // what integration threshold? Elastic or pion? 
 
       double fZ,fA;
       // for GetRadiatedXS method, we'll need to 
@@ -71,7 +71,7 @@ class RadiativeCorrections {
       void Init();
       void Print();
 
-      void SetIntegrationThreshold(int t) { fThreshold = t; } 
+      void SetIntegrationThreshold(RC::thrType_t t) { fThreshold = t; } 
 
       void SetA(double A)   { fA     = A;     }
       void SetZ(double Z)   { fZ     = Z;     }
