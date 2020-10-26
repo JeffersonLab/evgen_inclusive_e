@@ -10,10 +10,10 @@ namespace Kinematics {
       return Q2;
    }
    //________________________________________________________________________
-   double GetW(double Es,double Ep,double th){
+   double GetW(double Es,double Ep,double th,double M){
       double Nu = Es-Ep;
       double Q2 = GetQ2(Es,Ep,th);
-      double W2 = proton_mass*proton_mass + 2.*proton_mass*Nu - Q2;
+      double W2 = M*M + 2.*M*Nu - Q2;
       return sqrt(W2);
    }
    //________________________________________________________________________
