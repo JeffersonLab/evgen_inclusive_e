@@ -54,7 +54,6 @@ class RadiativeCorrections {
       double GetPhi(double);                       // phi(v), v = arbitrary value  
       double GetEsMin(double);                     // EsMin(Ep) 
       double GetEpMax(double);                     // EpMax(Es)                        
-      double GetQ2(double,double);                 // Q2(Es,Ep) 
       double GetSpence(double);                    // Spence(x), x = arbitrary value 
 
       double EsIntegrand(const double);

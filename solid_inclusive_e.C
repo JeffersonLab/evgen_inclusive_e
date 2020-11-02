@@ -286,7 +286,7 @@ int  main(Int_t argc, char *argv[])
 		
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
 			//xs in unit of mub/GeV-sr
-			dXSdEdOmega_mubGeVSr = xs; 
+			dXSdEdOmega_mubGeVSr = xs;
 			xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
 	
 			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz

@@ -42,11 +42,11 @@ class eInclusiveCrossSection{
       void SetTh(double v){fTh = v;}
 
       double GetMottXS(double,double);
-      double GetZ(){return fZ;}
-      double GetA(){return fA;}
-      double GetEs(){return fEs;}
-      double GetEp(){return fEp;}
-      double GetTh(){return fTh;}
+      double GetZ()             const { return fZ;  }
+      double GetA()             const { return fA;  }
+      double GetEs()            const { return fEs; }
+      double GetEp()            const { return fEp; }
+      double GetTh()            const { return fTh; }
 
       virtual double GetBornXS()=0;
 

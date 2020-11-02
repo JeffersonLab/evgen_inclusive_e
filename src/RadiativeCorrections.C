@@ -13,8 +13,6 @@ void RadiativeCorrections::Init(){
    fMT       = 0;
    fZ        = 0;
    fA        = 0;
-   fA        = 0;
-   fZ        = 0;
    fb        = 0;
    fXi       = 0;
    fEta      = 0;
@@ -41,7 +39,7 @@ double RadiativeCorrections::Radiate(){
    fT     = fTa + fTb;
 
    if( (fTa==0)||(fTb==0) ){
-      std::cout << "[GetRadiatedXS]: Radiation lengths are zero! Check your input... " << std::endl;
+      std::cout << "[RadiativeCorrections::Radiate]: Radiation lengths are zero! Check your input... " << std::endl;
       return -1;
    }
 
@@ -299,7 +297,8 @@ double RadiativeCorrections::Integrate(double (RadiativeCorrections::*f)(const d
    return ans;
 }
 //_____________________________________________________________________________________________
-double RadiativeCorrections::AdaptiveSimpsonAux(double (RadiativeCorrections::*f)(const double),double A,double B,double epsilon,
+double RadiativeCorrections::AdaptiveSimpsonAux(double (RadiativeCorrections::*f)(const double),
+      double A,double B,double epsilon,
       double S,double fa,double fb,double fc,int bottom){
    // Recursive auxiliary function for AdaptiveSimpson() function
    double C      = (A + B)/2.0;
