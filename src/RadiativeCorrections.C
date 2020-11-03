@@ -39,8 +39,7 @@ double RadiativeCorrections::Radiate(){
    fT     = fTa + fTb;
 
    if( (fTa==0)||(fTb==0) ){
-      std::cout << "[RadiativeCorrections::Radiate]: Radiation lengths are zero! Check your input... " << std::endl;
-      return -1;
+      std::cout << "[RadiativeCorrections::Radiate]: WARNING! Radiation lengths are zero! " << std::endl;
    }
 
    CalculateEta();
@@ -293,7 +292,6 @@ double RadiativeCorrections::Integrate(double (RadiativeCorrections::*f)(const d
    double fc  = (this->*f)(C);
    double S   = (H/6.0)*(fa + 4.0*fc + fb);
    double ans = AdaptiveSimpsonAux(f,A,B,epsilon,S,fa,fb,fc,Depth);
-
    return ans;
 }
 //_____________________________________________________________________________________________
