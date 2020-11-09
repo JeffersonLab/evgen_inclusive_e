@@ -15,6 +15,8 @@
 #include "fixed_target_xs.h"
 
 #include "RadiativeCorrections.h"
+#include "InputParameters.h"
+#include "FileManager.h"
 
 using namespace LHAPDF;
 using namespace std;
@@ -99,7 +101,35 @@ int  main(Int_t argc, char *argv[])
     std::cout << "--> Done!" << std::endl;
     delete myRC; 
     std::cout << "--> Deleted RC object" << std::endl;
- 
+
+    inputParameters_t par; 
+    FileManager *myFN = new FileManager();
+    myFN->LoadInputData("./input/parameters.txt",par); 
+
+    std::cout << "INPUT PARAMETERS: " << std::endl;
+    std::cout << "num_evt:        " <<  par.num_evt              << std::endl;
+    std::cout << "output_name:    " <<  par.output_name          << std::endl;
+    std::cout << "pol PDF name:   " <<  par.pol_pdfset_name      << std::endl;
+    std::cout << "pol PDF ID:     " <<  par.pol_pdfset_ID        << std::endl;
+    std::cout << "unpol PDF name: " <<  par.unpol_pdfset_name    << std::endl;
+    std::cout << "unpol PDF ID:   " <<  par.unpol_pdfset_ID      << std::endl;
+    std::cout << "tgt Z:          " <<  par.tgt_Z                << std::endl;
+    std::cout << "tgt A:          " <<  par.tgt_A                << std::endl;
+    std::cout << "luminosity:     " <<  par.lumi                 << std::endl;
+    std::cout << "E_beam:         " <<  par.E_beam               << std::endl;
+    std::cout << "th_min:         " <<  par.theta_min            << std::endl;
+    std::cout << "th_max:         " <<  par.theta_max            << std::endl;
+    std::cout << "Ep_min:         " <<  par.Ep_min               << std::endl;
+    std::cout << "Ep_max:         " <<  par.Ep_max               << std::endl;
+    std::cout << "vx_min:         " <<  par.vx_min               << std::endl;
+    std::cout << "vx_max:         " <<  par.vx_max               << std::endl;
+    std::cout << "vy_min:         " <<  par.vy_min               << std::endl;
+    std::cout << "vy_max:         " <<  par.vy_max               << std::endl;
+    std::cout << "vz_min:         " <<  par.vz_min               << std::endl;
+    std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
+
+    delete myFN; 
+
 	//###################################################################################
 	//
 	//         user inputs for the simulation
