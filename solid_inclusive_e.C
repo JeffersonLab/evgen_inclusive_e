@@ -203,7 +203,7 @@ int  main(Int_t argc, char *argv[])
 	//PDF set to do uncertainty calculation
 	LHAPDF::PDFSet *pol_pdf_set=new LHAPDF::PDFSet(pol_pdfset_name);
 	vector<LHAPDF::PDF*> pol_pdfs=pol_pdf_set->mkPDFs(); //get pdfs, for uncetainty estimation
-	int n_member=pol_pdf_set->size();
+	// int n_member=pol_pdf_set->size();
 	//cout<<"ERROR CL LEVEL: "<<pol_pdf_set->errorConfLevel()<<endl;
 	
 	
@@ -281,7 +281,7 @@ int  main(Int_t argc, char *argv[])
 	TRandom3 rand;
 	rand.SetSeed(0);
 
-	TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
+	// TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
 
 	for(int i=0; i<num_evt; i++){
 		//uniform vx, vy, vz

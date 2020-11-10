@@ -39,7 +39,6 @@ int FileManager::LoadInputData(const char *inpath,inputParameters_t &par){
 
    std::vector<std::string> data;
    // now parse the data 
-   int M=0;
    int NROW = line.size();
    for(int i=0;i<NROW;i++){
       // split to vector
