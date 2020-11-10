@@ -100,6 +100,7 @@ double RadiativeCorrections::GetEsMin(double Ep){
       num   = Ep;
       denom = 1.0 - (2.0*Ep/fMT)*SIN2; 
    }else if(fThreshold==RC::kPion){
+      // this EXCLUDES the QE tail  
       num   = pion_mass*pion_mass + 2.*proton_mass*pion_mass + 2.*proton_mass*Ep;
       denom = 2.*proton_mass - (4.0*Ep)*SIN2;
    }
@@ -118,6 +119,7 @@ double RadiativeCorrections::GetEpMax(double Es){
       num   = Es;
       denom = 1.0 + (2.0*Es/fMT)*SIN2; 
    }else if(fThreshold==RC::kPion){
+      // this EXCLUDES the QE tail  
       num   = 2.*proton_mass*Es - 2.*proton_mass*pion_mass - pion_mass*pion_mass;
       denom = 2.*proton_mass + (4.0*Es)*SIN2;
    }
