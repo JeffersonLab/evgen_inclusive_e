@@ -16,9 +16,6 @@
 #include "norad_XS.h"
 #include "RadiativeCorrections.h"
 #include "eInclusiveCrossSection.h"
-#include "InputParameters.h"
-#include "FileManager.h"
-
 using namespace LHAPDF;
 using namespace std;
 
@@ -92,77 +89,23 @@ void F1F2QE09(int Z, int IA, double QSQ, double wsq, double &F1, double &F2);
 
 int  main(Int_t argc, char *argv[])
 {
-  
-char input_gen_file[50]; 
-	    strcpy(input_gen_file,argv[1]);
-    std::string str;
-    std::string substring;
-    str = input_gen_file;
-    substring=str.substr(str.find("_")+1,3);
-    std::cout<<"name"<< substring <<std::endl;
-  //std::string outname(22,input_gen_file);
-  //  std::cout << "input_file:        " << outname             << std::endl;
+    int filen=0;
+    if (argc !=3) return 0;
+    else filen=int(atof(argv[1]));
+   
     // test the radiative correction class
     std::cout << "Creating RadiativeCorrection object..." << std::endl; 
     RadiativeCorrections *myRC = new RadiativeCorrections(); 
     std::cout << "--> Done!" << std::endl;
     delete myRC; 
     std::cout << "--> Deleted RC object" << std::endl;
-
-    inputParameters_t par; 
-    FileManager *myFN = new FileManager();
-    myFN->LoadInputData(input_gen_file,par); 
-
-    std::cout << "INPUT PARAMETERS: " << std::endl;
-    std::cout << "num_evt:        " <<  par.num_evt              << std::endl;
-    std::cout << "output_name:    " <<  par.output_name          << std::endl;
-    std::cout << "pol PDF name:   " <<  par.pol_pdfset_name      << std::endl;
-    std::cout << "pol PDF ID:     " <<  par.pol_pdfset_ID        << std::endl;
-    std::cout << "unpol PDF name: " <<  par.unpol_pdfset_name    << std::endl;
-    std::cout << "unpol PDF ID:   " <<  par.unpol_pdfset_ID      << std::endl;
-    std::cout << "tgt Z:          " <<  par.tgt_Z                << std::endl;
-    std::cout << "tgt A:          " <<  par.tgt_A                << std::endl;
-    std::cout << "luminosity:     " <<  par.lumi                 << std::endl;
-    std::cout << "E_beam:         " <<  par.E_beam               << std::endl;
-    std::cout << "th_min:         " <<  par.theta_min            << std::endl;
-    std::cout << "th_max:         " <<  par.theta_max            << std::endl;
-    std::cout << "Ep_min:         " <<  par.Ep_min               << std::endl;
-    std::cout << "Ep_max:         " <<  par.Ep_max               << std::endl;
-    std::cout << "vx_min:         " <<  par.vx_min               << std::endl;
-    std::cout << "vx_max:         " <<  par.vx_max               << std::endl;
-    std::cout << "vy_min:         " <<  par.vy_min               << std::endl;
-    std::cout << "vy_max:         " <<  par.vy_max               << std::endl;
-    std::cout << "vz_min:         " <<  par.vz_min               << std::endl;
-    std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
-
-    delete myFN; 
-
+ 
 	//###################################################################################
 	//
 	//         user inputs for the simulation
 	//
 	//###################################################################################
-	const double lumi=par.lumi;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
-	const double E=par.E_beam;   //GeV, electron beam energy
-	const int Z=par.tgt_Z;  //target nucleus Z
-	const int A=par.tgt_A;  //target nucleus A   cross section is calculated per A
-	const double theta_min=par.theta_min ;  //degree, define solid angle
-	const double theta_max=par.theta_max;  //degree, define solid angle
-	const double Ep_min=par.Ep_min;     //GeV, define momentum space
-	const double Ep_max=par.Ep_max;    //GeV, define momentum space
-	const double vertex_x_min=par.vx_min;  //cm, depend on the raster size
-	const double vertex_x_max=par.vx_max;   //cm
-	const double vertex_y_min=par.vy_min;  //cm
-	const double vertex_y_max=par.vy_max;   //cm
-	const double vertex_z_min=par.vz_min;   //cm
-	const double vertex_z_max=par.vz_max;  //cm
-	const int num_evt=par.num_evt;    //number of event to generate within the phase space
-	string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
-	string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
-// 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
-// 	string unpol_pdfset_name="cteq66";   // unpol. pdfset name		
-
-	/*const double lumi=0.63e39;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
+	const double lumi=0.63e39;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
 	const double E=4.74;   //GeV, electron beam energy
 	const int Z=2;  //target nucleus Z
 	const int A=3;  //target nucleus A   cross section is calculated per A
@@ -178,14 +121,15 @@ char input_gen_file[50];
 	const double vertex_z_max=30;  //cm
 	const int num_evt=int(atof(argv[2]));    //number of event to generate within the phase space
 	string pol_pdfset_name="NNPDFpol11_100";    //pol. pdfset name
-	string unpol_pdfset_name="CT14nlo";*/   // unpol. pdfset name
+	string unpol_pdfset_name="CT14nlo";   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
 // 	string unpol_pdfset_name="cteq66";   // unpol. pdfset name		
-	TString name_rootfile_output=par.output_name;   // name of the rootfile to save output data
+
+	TString name_rootfile_output=Form("gen_%i.root",filen);   // name of the rootfile to save output data
 	
 	//output lund file
 	ofstream OUTPUT_lund;
-	OUTPUT_lund.open(Form("gen_%s.lund",substring.data()));
+	OUTPUT_lund.open(Form("gen_%i.lund",filen));
 	if(!OUTPUT_lund){
 		cout<<"error! can't open lund output!"<<endl;
 	}
@@ -204,7 +148,7 @@ char input_gen_file[50];
 	
 	//pol pdf sets
 	//string pol_pdfset_name="NNPDFpol11_100";    //pdfset name
-	string pol_pdfset_id=par.pol_pdfset_ID;         //central file
+	string pol_pdfset_id="0000";         //central file
 	const int pol_pdf_file_id=boost::lexical_cast<int>(pol_pdfset_id);  //nothing, just translate "0000" to 0, that's it
 	
 	//unpol pdf sets
@@ -213,7 +157,7 @@ char input_gen_file[50];
 	//string unpol_pdfset_name="MMHT2014nlo68cl";   //pdfset name
 	//string unpol_pdfset_name="MMHT2014nnlo68cl";   //pdfset name
 	//string unpol_pdfset_name="MMHT2014lo68cl";   //pdfset name
-	string unpol_pdfset_id=par.unpol_pdfset_ID;     //central file
+	string unpol_pdfset_id="0000";     //central file
 	const int unpol_pdf_file_id=boost::lexical_cast<int>(unpol_pdfset_id); //nothing, just translate "0000" to 0, that's it
 
 	cout<<"##########################################"<<endl;
@@ -229,7 +173,7 @@ char input_gen_file[50];
 	//PDF set to do uncertainty calculation
 	LHAPDF::PDFSet *pol_pdf_set=new LHAPDF::PDFSet(pol_pdfset_name);
 	vector<LHAPDF::PDF*> pol_pdfs=pol_pdf_set->mkPDFs(); //get pdfs, for uncetainty estimation
-	// int n_member=pol_pdf_set->size();
+	int n_member=pol_pdf_set->size();
 	//cout<<"ERROR CL LEVEL: "<<pol_pdf_set->errorConfLevel()<<endl;
 	
 	
@@ -265,8 +209,8 @@ char input_gen_file[50];
 	double mass=0.511/1000.0;  //GeV
 	double vx=0, vy=0, vz=0;
 	double xs=0; 
-	double dXSdEdOmega_mubGeVSr=0; // differential cross section 
 	double radxs=0; 
+	double dXSdEdOmega_mubGeVSr=0; // differential cross section 
 	double raddXSdEdOmega_mubGeVSr=0; // differential cross section 
 	double theta=0;
 	double phi=0;
@@ -311,7 +255,7 @@ char input_gen_file[50];
 	TRandom3 rand;
 	rand.SetSeed(0);
 
-	// TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
+	TBranch *brate = T->Branch("rate", &rate, "data/D");       //in unit Hz
 
 	for(int i=0; i<num_evt; i++){
 		//uniform vx, vy, vz
@@ -346,8 +290,8 @@ char input_gen_file[50];
 		
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
 			//xs in unit of mub/GeV-sr
-			//dXSdEdOmega_mubGeVSr = xs;
-			//xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
+			//dXSdEdOmega_mubGeVSr = xs;  //old calculation
+                        //add radiative effects
                         eInclusiveCrossSection *noXS;
                         noradXS NoRdXSDEdOmega;
  

@@ -383,7 +383,7 @@ double calculate_neutron_AL_g1gz(PDF* unpol_pdf, PDF* pol_pdf, double x, double 
 
 	double F1g = calculate_neutron_F1g(unpol_pdf, x, Q2);
 	double g1gz = calculate_neutron_g1gz(pol_pdf, x, Q2);
-	double g5gz = calculate_neutron_g5gz(pol_pdf, x, Q2);
+	// double g5gz = calculate_neutron_g5gz(pol_pdf, x, Q2);
 
 	double AL_g1gz= prob_const * (  gA_e*Y_m/Y_p*g1gz/F1g );
 
@@ -395,11 +395,11 @@ double calculate_neutron_AL_g1gz(PDF* unpol_pdf, PDF* pol_pdf, double x, double 
 double calculate_neutron_AL_g5gz(PDF* unpol_pdf, PDF* pol_pdf, double x, double Q2, double y){
 
 	double prob_const = GF*Q2/2.0/sqrt(2.0)/PI/alpha;
-	double Y_m = 2.0*y - y*y;
-	double Y_p = y*y -2.0*y + 2;
+	// double Y_m = 2.0*y - y*y;
+	// double Y_p = y*y -2.0*y + 2;
 
 	double F1g = calculate_neutron_F1g(unpol_pdf, x, Q2);
-	double g1gz = calculate_neutron_g1gz(pol_pdf, x, Q2);
+	// double g1gz = calculate_neutron_g1gz(pol_pdf, x, Q2);
 	double g5gz = calculate_neutron_g5gz(pol_pdf, x, Q2);
 
 	double AL_g5gz= prob_const * ( gv_e*g5gz/F1g  );

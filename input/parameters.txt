@@ -1,0 +1,27 @@
+# number of events
+num_evt               10 
+# file name 
+output_name           gen.root      
+# PDF model names
+pol_pdfset_name       NNPDFpol11_100       
+pol_pdfset_ID         0000       
+unpol_pdfset_name     CT14nlo    
+unpol_pdfset_ID       0000       
+# target settings 
+tgt_Z                 2     
+tgt_A                 3 
+# luminosity  
+lumi                  1E+36 
+# kinematics  
+E_beam                4.74   
+theta_min             0     
+theta_max             180  
+Ep_min                0         
+Ep_max                4.74      
+# beam settings 
+vx_min               -0.100       
+vx_max                0.100      
+vy_min               -0.100        
+vy_max                0.100        
+vz_min               -0.100       
+vz_max                0.100      

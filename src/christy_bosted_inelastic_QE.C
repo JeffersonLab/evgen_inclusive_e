@@ -1037,8 +1037,9 @@ double resd(double q2, double w2, double xval[50]){
 	//arxiv 0711.0159, submitted to PRC
 	//epirical fit to inelastic electron-deuteron and electron-neutron resonance 
 	//region transverse cross sections.
-	
-	double F1, nu, qv, dw2dpf, w2p, sigp, f1sv;
+
+        // double f1sv=0,dw2dpdf=0; 	
+	double F1=0,nu=0,qv=0,w2p=0,sigp=0;
 	double am=0.938;
 	double amd=1.8756, pz, f1m, f2m;
 
@@ -1400,7 +1401,7 @@ void F1F2QE09(int Z, int IA, double QSQ,
   if(IA == 2){
 	  pz=(QSQ - 2*amp*Nu)/2.0/QV;
 	  izz = int((pz+1.0)/0.01)+1;
-	  int max_izz;
+	  int max_izz=0;
 	  if(izz>1){
 		  max_izz=izz;
 	  }else if(izz<=1){
@@ -1410,7 +1411,7 @@ void F1F2QE09(int Z, int IA, double QSQ,
 	  if(max_izz>200){
 		  izz=200;
 	  }else if(max_izz<=200){
-		  izz=izz;
+		  // izz=izz;
 	  }
 
 	  izznom=izz;
@@ -1422,14 +1423,14 @@ void F1F2QE09(int Z, int IA, double QSQ,
 	  dwin=1.0e6;
 	  izzmin=0;
 	  
-	  int loop_upper_max;
+	  int loop_upper_max=0;
 	  if((izznom+izdif)>1){
 		  loop_upper_max=izznom+izdif;
 	  }else if((izznom+izdif)<=1){
 		  loop_upper_max=1;
 	  }
 
-	  int loop_upper;
+	  int loop_upper=0;
 	  if(loop_upper_max>200){
 		  loop_upper=200;
 	  }else if(loop_upper_max<=200){
@@ -1447,7 +1448,7 @@ void F1F2QE09(int Z, int IA, double QSQ,
 		  }
 	  }
 
-	  int tmp;
+	  int tmp=0;
 	  if(izzmin>2){
 		tmp=izzmin;
 	  }else if(izzmin<=2){

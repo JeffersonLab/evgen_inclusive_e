@@ -10,7 +10,8 @@ else
 endif
 
 #using LHAPDF6
-setenv LHAPDF /group/solid/apps/evgen/LHAPDF/LHAPDF-6.1.6
+#setenv LHAPDF /group/solid/apps/evgen/LHAPDF/LHAPDF-6.1.6
+setenv LHAPDF /w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/solid_inclusive_e/LHAPDF
 setenv LD_LIBRARY_PATH ${LHAPDF}/lib:${LD_LIBRARY_PATH}
 setenv LHAPDF_DATA_PATH ${LHAPDF}/share/LHAPDF
 #setenv LHAPDF_DATA_PATH /cvmfs/sft.cern.ch/lcg/external/lhapdfsets/current
