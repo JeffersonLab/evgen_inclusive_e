@@ -21,7 +21,6 @@ namespace RC {
 class RadiativeCorrections {
 
    private:
-
       RC::thrType_t fThreshold;  // integration threshold: elastic or pion 
 
       double fZ,fA;

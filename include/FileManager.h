@@ -8,7 +8,8 @@
 #include <fstream>
 #include <sstream>  
 #include <vector>
-#include <string> 
+#include <string>
+#include <iterator>  
 
 #include "InputParameters.h"
 
@@ -22,6 +23,8 @@ class FileManager {
    public:
       FileManager();
       ~FileManager();
+
+      void SetVerbosity(int v) { fVerbosity = v; } 
 
       int LoadInputData(const char *inpath,inputParameters_t &data);  
 
