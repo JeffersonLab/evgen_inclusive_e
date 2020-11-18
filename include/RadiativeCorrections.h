@@ -11,7 +11,8 @@
 
 #include "constants.h"
 #include "Kinematics.h"
-#include "eInclusiveCrossSection.h"  // placeholder for now
+#include "eInclusiveCrossSection.h" 
+#include "ElasticFormFactor.h"
 // #include "F1F209.h"
 
 namespace RC {
@@ -39,7 +40,7 @@ class RadiativeCorrections {
       double CalculateEsIntegral();
       double CalculateEpIntegral();
 
-      // For the GetRadiatedXS method
+      // For the Radiate method
       double GetTr(double);           // Tr(Q2): changes PER INTEGRATION BIN 
       double GetFTilde(double);       // FTilde(Q2): changes PER INTEGRATION BIN 
       double GetPhi(double);          // phi(v), v = arbitrary value  
@@ -52,7 +53,14 @@ class RadiativeCorrections {
       double Integrate(double (RadiativeCorrections::*)(const double),double,double,double,int);
       double AdaptiveSimpsonAux(double (RadiativeCorrections::*)(const double),double,double,double,double,double,double,double,int);
 
+      // elastic tail 
+      double GetF_soft(); 
+      double GetWs(double,double,double); 
+      double GetWp(double,double,double);
+      double sigma_el(double);  
+
       eInclusiveCrossSection *fInclXS;
+      ElasticFormFactor *fFormFactor;
 
    public:
       RadiativeCorrections();
@@ -65,9 +73,11 @@ class RadiativeCorrections {
       void SetTa(double ta) { fTa = ta; }
       void SetTb(double tb) { fTb = tb; }
 
-      void SetCrossSection(eInclusiveCrossSection *XS) { fInclXS = XS; }
+      void SetCrossSection(eInclusiveCrossSection *XS) { fInclXS     = XS; }
+      void SetFormFactor(ElasticFormFactor *ff)        { fFormFactor = ff; }
 
       double Radiate();
+      double ElasticTail_peakApprox();  
 
 }; 
 

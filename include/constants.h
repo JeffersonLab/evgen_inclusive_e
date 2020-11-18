@@ -1,7 +1,10 @@
 #ifndef CONSTANTS_YX_H
 #define CONSTANTS_YX_H
 
-const double HBAR_C = 624.4197;  // in GeV*nb^(1/2) 
+const double HBAR_C = 624.4197;  // in GeV*nb^(1/2)
+
+const double mu_p=2.793; 
+const double mu_n=-1.913;  
 
 const double sin2thetaW=0.232;
 

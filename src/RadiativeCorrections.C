@@ -284,6 +284,105 @@ double RadiativeCorrections::CalculateEpIntegral(){
    double AnsEp   = Integrate(&RadiativeCorrections::EpIntegrand,min,max,epsilon,depth);
    return AnsEp;
 }
+//___________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_peakApprox(){
+   // Elastic radiative tail using the energy-peaking approximation
+   // Phys. Rev. D. 12, 1884 (A56)  
+   double thr    = fThDeg*deg_to_rad; 
+   double SIN    = sin(thr/2.);
+   double SIN2   = SIN*SIN;
+   double ws     = GetWs(fEs,fEp,fThDeg);  
+   double wp     = GetWp(fEs,fEp,fThDeg);
+   double vp     = wp/(fEp+wp);  
+   double Q2     = Kinematics::GetQ2(fEs,fEp,fThDeg); 
+   double Tr     = GetTr(Q2); 
+   // first term  
+   double T1=0;
+   double T1_num = fMT + 2.*(fEs-ws)*SIN2;
+   double T1_den = fMT - 2.*fEp*SIN2; 
+   if(T1_den!=0) T1 = T1_num/T1_den; 
+   // second term  
+   double FTilde = GetFTilde(Q2);
+   double T2     = FTilde*sigma_el(fEs-ws);
+   // third term
+   double T3=0; 
+   double T3_num = FTilde*sigma_el(fEs)*fb*Tr*GetPhi(vp); 
+   if(wp!=0) T3  = T3_num/wp;
+   double el_tail = T1*T2*T3; 
+   return el_tail;  
+}
+//___________________________________________________________________________________
+double RadiativeCorrections::sigma_el(double Es){
+   // elastic cross section
+   // Phys.Rev.D 12,1884 (A13)
+   double thr   = fThDeg*deg_to_rad; 
+   double COS   = cos(thr/2.); 
+   double COS2  = COS*COS; 
+   double SIN   = sin(thr/2.); 
+   double SIN2  = SIN*SIN;
+   double TAN2=0;
+   if(COS2!=0) TAN2 = SIN2/COS2; 
+   double Ep    = Es/(1 + (2.*Es/fMT)*SIN2);
+   double Q2    = Kinematics::GetQ2(Es,Ep,fThDeg); 
+   double tau   = Q2/(4.*fMT); 
+   double GE    = fFormFactor->GetGE(Q2);   
+   double GM    = fFormFactor->GetGM(Q2);  
+   double W1    = tau*GM*GM;
+   double W2    = (GE*GE + tau*GM*GM)/(1+tau);
+   // term 1 
+   double T1=0;
+   double T1_num = alpha*alpha*COS2; 
+   double T1_den = 4.*Es*Es*SIN2*SIN2; 
+   if(T1_den!=0) T1 = T1_num/T1_den;  
+   // term 2 
+   double T2=0;
+   double T2_num = Ep;  
+   double T2_den = Es;
+   if(T2_den!=0) T2 = T2_num/T2_den; 
+   // term 3 
+   double T3     = W2 + 2.*TAN2*W1;  
+   double xs_el  = T1*T2*T3; 
+   return xs_el; 
+}
+//___________________________________________________________________________________
+double RadiativeCorrections::GetF_soft(){
+   // Multiple-photon correction
+   // Phys.Rev.D 12,1884 (A58)
+   double ws    = GetWs(fEs,fEp,fThDeg);  
+   double wp    = GetWp(fEs,fEp,fThDeg);  
+   double Q2    = Kinematics::GetQ2(fEs,fEp,fThDeg); 
+   double Tr    = GetTr(Q2); 
+   double arg1  = fb*(fTb+Tr); 
+   double arg2  = fb*(fTa+Tr);
+   double Fsoft = pow(ws/fEs,arg1)*pow(wp/(fEp+wp),arg2);
+   return Fsoft;  
+}
+//_____________________________________________________________________________________________
+double RadiativeCorrections::GetWs(double Es,double Ep,double th){
+   double thr    = th*deg_to_rad; 
+   double SIN    = sin(thr/2.);
+   double SIN2   = SIN*SIN; 
+   double T1     = Es; 
+   double T2_num = Ep;
+   double T2_den = 1. - (2.*Ep/fMT)*SIN2;
+   double T2=0; 
+   if(T2_den!=0) T2 = T2_num/T2_den;  
+   double ws = T1 - T2; 
+   return ws;
+}
+//_____________________________________________________________________________________________
+double RadiativeCorrections::GetWp(double Es,double Ep,double th){
+   double thr    = th*deg_to_rad; 
+   double SIN    = sin(thr/2.);
+   double SIN2   = SIN*SIN; 
+   double T2     = Ep; 
+   double T1_num = Es; 
+   double T1_den = 1. + (2.*Es/fMT)*SIN2;
+   double T1=0;
+   if(T1_den!=0) T1 = T1_num/T1_den;  
+   double wp = T1 - T2; 
+   return wp;
+}
 //_____________________________________________________________________________________________
 double RadiativeCorrections::Integrate(double (RadiativeCorrections::*f)(const double),double A,double B,double epsilon,int Depth){
    // Adaptive Simpson's Rule
