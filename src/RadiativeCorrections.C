@@ -287,22 +287,23 @@ double RadiativeCorrections::CalculateEpIntegral(){
 //_____________________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_exact(){
    // Elastic radiative tail using the exact formalism 
-   // Phys. Rev. D 12, (A24)
-   // FIXME: Look at Eq A62, A63 to complete this calculation
-   double sigma_ex = ElasticTail_sigmaEx(); 
-   double el_tail = 0; 
+   // Phys. Rev. D 12, 1884 (A62)
+   double Rt       = 1.;  // FIXME: account for radiation from the target.  Eq A59--A61.  
+   double sigma_ex = ElasticTail_sigmaEx();
+   double sigma_b  = ElasticTail_sigmaB();  
+   double fsoft    = GetF_soft();
+   double el_tail  = fsoft*(sigma_ex*Rt + sigma_b); 
    return el_tail; 
 }
 //_____________________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_sigmaEx(){
    // Elastic radiative tail using the exact formalism 
    // Phys. Rev. D 12, (A24)
-   // FIXME: Look at Eq A62, A63 to complete this calculation 
    int depth = 10; 
    double epsilon = 1e-10;
    double min = -1; 
    double max =  1; 
-   double Ans = Integrate(&RadiativeCorrections::ElasticTail_exactIntegrand,min,max,epsilon,depth);
+   double Ans = Integrate(&RadiativeCorrections::ElasticTail_sigmaEx_Integrand,min,max,epsilon,depth);
    // scale factor 
    double sf=0;
    double sf_num = ( pow(alpha,3)/(2.*PI) )*fEp; 
@@ -406,14 +407,25 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
 }
 //___________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_peakApprox(){
-   // Elastic radiative tail using the energy-peaking approximation
-   // Phys. Rev. D. 12, 1884 (A56)  
+   // Elastic radiative tail, peaking approximation 
+   // Phys. Rev. D 12, 1884 (A63) 
+   double sigma_p = ElasticTail_sigmaP(); 
+   double sigma_b = ElasticTail_sigmaB();
+   double fsoft   = GetF_soft();  
+   double el_tail = fsoft*(sigma_p + sigma_b); 
+   return el_tail; 
+}
+//___________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_sigmaB(){
+   // real bremsstrahlung and ionization loss  
+   // looks like the angle-peaking approximation (c.f., sigmaP below) 
    double thr    = fThDeg*deg_to_rad; 
    double SIN    = sin(thr/2.);
    double SIN2   = SIN*SIN;
    double ws     = GetWs(fEs,fEp,fThDeg);  
    double wp     = GetWp(fEs,fEp,fThDeg);
    double vp     = wp/(fEp+wp);  
+   double vs     = ws/fEs;  
    double Q2     = Kinematics::GetQ2(fEs,fEp,fThDeg); 
    double Tr     = GetTr(Q2); 
    // first term  
@@ -423,13 +435,64 @@ double RadiativeCorrections::ElasticTail_peakApprox(){
    if(T1_den!=0) T1 = T1_num/T1_den; 
    // second term  
    double FTilde = GetFTilde(Q2);
-   double T2     = FTilde*sigma_el(fEs-ws);
+   double T2_sf  = FTilde*sigma_el(fEs-ws);
+   double T2a=0; 
+   double T2a_num = fb*fTb*GetPhi(vs);
+   double T2a_den = ws; 
+   if(T2a_den!=0) T2a = T2a_num/T2a_den;   
+   double T2b=0; 
+   double T2b_num = fXi;
+   double T2b_den = 2.*ws*ws; 
+   if(T2b_den!=0) T2b = T2b_num/T2b_den;   
+   double T2 = T2_sf*(T2a + T2b);  
    // third term
+   double T3=0;
+   double T3_sf   = FTilde*sigma_el(fEs);  
+   double T3a_num = fb*fTa*GetPhi(vp); 
+   double T3a_den = wp; 
+   if(T3a_den!=0) T3 = T3a_num/T3a_den;
+   double T3b_num = fXi;
+   double T3b_den = 2.*wp*wp; 
+   if(T3b_den!=0) T3b = T3b_num/T3b_den;   
+   double T3 = T3_sf*(T3a + T3b);  
+   // put it together 
+   double val = T1*T2 + T3; 
+   return val;  
+}
+//___________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_sigmaP(){
+   // Elastic radiative tail using the angle-peaking approximation
+   // Phys. Rev. D. 12, 1884 (A56)  
+   double thr    = fThDeg*deg_to_rad; 
+   double SIN    = sin(thr/2.);
+   double SIN2   = SIN*SIN;
+   double ws     = GetWs(fEs,fEp,fThDeg);  
+   double wp     = GetWp(fEs,fEp,fThDeg);
+   double vp     = wp/(fEp+wp);  
+   double vs     = ws/fEs;  
+   double Q2     = Kinematics::GetQ2(fEs,fEp,fThDeg); 
+   double Tr     = GetTr(Q2); 
+   // first term  
+   double T1=0;
+   double T1_num = fMT + 2.*(fEs-ws)*SIN2;
+   double T1_den = fMT - 2.*fEp*SIN2; 
+   if(T1_den!=0) T1 = T1_num/T1_den; 
+   // second term  
+   double FTilde = GetFTilde(Q2);
+   double T2_sf  = FTilde*sigma_el(fEs-ws);
+   double T2_num = fb*Tr*GetPhi(vs); 
+   double T2_den = ws;
+   double T2=0; 
+   if(T2_den!=0) T2 = T2_sf*T2_num/T2_den;
+   // third term 
+   double T3_sf  = FTilde*sigma_el(fEs);
+   double T3_num = fb*Tr*GetPhi(vp); 
+   double T3_den = wp;
    double T3=0; 
-   double T3_num = FTilde*sigma_el(fEs)*fb*Tr*GetPhi(vp); 
-   if(wp!=0) T3  = T3_num/wp;
-   double el_tail = T1*T2*T3; 
-   return el_tail;  
+   if(T3_den!=0) T3 = T3_sf*T3_num/T3_den;
+   // put it together 
+   double val = T1*T2 + T3; 
+   return val;  
 }
 //___________________________________________________________________________________
 double RadiativeCorrections::sigma_el(double Es){

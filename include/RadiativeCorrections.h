@@ -58,6 +58,8 @@ class RadiativeCorrections {
       double GetWs(double,double,double); 
       double GetWp(double,double,double);
       double sigma_el(double); 
+      double ElasticTail_sigmaP();    
+      double ElasticTail_sigmaB();    
       double ElasticTail_sigmaEx();    
       double ElasticTail_sigmaEx_Integrand(const double);    
 
