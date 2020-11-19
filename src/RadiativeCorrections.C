@@ -288,6 +288,16 @@ double RadiativeCorrections::CalculateEpIntegral(){
 double RadiativeCorrections::ElasticTail_exact(){
    // Elastic radiative tail using the exact formalism 
    // Phys. Rev. D 12, (A24)
+   // FIXME: Look at Eq A62, A63 to complete this calculation
+   double sigma_ex = ElasticTail_sigmaEx(); 
+   double el_tail = 0; 
+   return el_tail; 
+}
+//_____________________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_sigmaEx(){
+   // Elastic radiative tail using the exact formalism 
+   // Phys. Rev. D 12, (A24)
+   // FIXME: Look at Eq A62, A63 to complete this calculation 
    int depth = 10; 
    double epsilon = 1e-10;
    double min = -1; 
@@ -301,7 +311,7 @@ double RadiativeCorrections::ElasticTail_exact(){
    return sf*Ans;
 }
 //_____________________________________________________________________________________________
-double RadiativeCorrections::ElasticTail_exactIntegrand(const double cos_thk){
+double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk){
    // Elastic radiative tail using the exact formalism 
    // Phys. Rev. D 12, (A24--41)
    // 4-vector definitions
