@@ -1,8 +1,8 @@
 #ifndef DIPOLE_ELASTIC_FORM_FACTOR_HH
 #define DIPOLE_ELASTIC_FORM_FACTOR_HH
 
-// dipole model of the elastic form factor for the proton 
-// fit from GMp(12) preprint  
+// dipole model of the elastic form factor for the proton
+// - see Phys. Rev. D 12, 1884 for details (A7 and A8)   
 
 #include <cstdlib>
 #include <iostream>

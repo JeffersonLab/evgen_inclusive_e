@@ -57,7 +57,8 @@ class RadiativeCorrections {
       double GetF_soft(); 
       double GetWs(double,double,double); 
       double GetWp(double,double,double);
-      double sigma_el(double);  
+      double sigma_el(double); 
+      double ElasticTail_exactIntegrand(const double);    
 
       eInclusiveCrossSection *fInclXS;
       ElasticFormFactor *fFormFactor;
@@ -78,6 +79,7 @@ class RadiativeCorrections {
 
       double Radiate();
       double ElasticTail_peakApprox();  
+      double ElasticTail_exact();  
 
 }; 
 

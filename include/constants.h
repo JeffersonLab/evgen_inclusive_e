@@ -40,5 +40,6 @@ const double pion_mass=0.140;         // GeV
 
 const double deg_to_rad = 1.0/180.0*PI;
 
+const double kappa_p = 1.7927; 
 
 #endif

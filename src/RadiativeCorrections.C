@@ -284,6 +284,116 @@ double RadiativeCorrections::CalculateEpIntegral(){
    double AnsEp   = Integrate(&RadiativeCorrections::EpIntegrand,min,max,epsilon,depth);
    return AnsEp;
 }
+//_____________________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_exact(){
+   // Elastic radiative tail using the exact formalism 
+   // Phys. Rev. D 12, (A24)
+   int depth = 10; 
+   double epsilon = 1e-10;
+   double min = -1; 
+   double max =  1; 
+   double Ans = Integrate(&RadiativeCorrections::ElasticTail_exactIntegrand,min,max,epsilon,depth);
+   // scale factor 
+   double sf=0;
+   double sf_num = ( pow(alpha,3)/(2.*PI) )*fEp; 
+   double sf_den = fEs;
+   if(sf_den!=0) sf = sf_num/sf_den;  
+   return sf*Ans;
+}
+//_____________________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_exactIntegrand(const double cos_thk){
+   // Elastic radiative tail using the exact formalism 
+   // Phys. Rev. D 12, (A24--41)
+   // 4-vector definitions
+   // s = 4-momentum of incident electron (Es,vec(s))  
+   // p = 4-momentum of scattered electron (Ep,vec(p))
+   // t = 4-momentum of target (MT,0) 
+   // k = 4-momentum of real photon emitted (w,vec(k))  
+   // u = s + t - p 
+   // scattering angle theta
+   double thr     = fThDeg*deg_to_rad; 
+   double COS     = cos(thr);
+   // vector calcs  
+   double s_mag   = sqrt(fEs*fEs - electron_mass*electron_mass); // FIXME: is this right?  
+   double p_mag   = sqrt(fEp*fEp - electron_mass*electron_mass); // FIXME: is this right?  
+   double s_dot_p = fEs*fEp - p_mag*s_mag*COS;
+   double u_0     = fEs + fMT - fEp;
+   double u_sq    = 2.*electron_mass*electron_mass + fMT*fMT - 2.*s_dot_p + 2.*fMT*(fEs-fEp); 
+   double u_mag   = sqrt(u_0*u_0-u_sq);  
+   // theta_k (angle between u and k)  
+   double sin_thk = sqrt(1. - cos_thk*cos_thk);  
+   // theta_p 
+   double cos_thp = (s_mag*COS - p_mag)/u_mag;  
+   double sin_thp = sqrt(1. - cos_thp*cos_thp);  
+   // theta_s 
+   double cos_ths = (s_mag - p_mag*COS)/u_mag;  
+   // other variables 
+   double w       = 0.5*(u_sq - fMT*fMT)/(u_0  - u_mag*cos_thk);  
+   double q_sq    = 2.*electron_mass*electron_mass - 2.*s_dot_p - 2.*w*u_mag*cos_thk;
+   double a       = w*(fEp - p_mag*cos_thp*cos_thk);
+   double a_pr    = w*(fEs - s_mag*cos_ths*cos_thk);
+   double b_pr    = (-1.)*w*p_mag*sin_thp*sin_thk;
+   double v       = 1./(a_pr - a);
+   double x       = sqrt( a*a - b_pr*b_pr );  
+   double y       = sqrt( a_pr*a_pr - b_pr*b_pr ); 
+   // form factors (NOTE: -q2 = Q2!)
+   double FTilde   = GetFTilde(-q_sq);   // FIXME: If we have the proton, is this set to 1? 
+   double tau      = -q_sq/(4.*fMT*fMT); 
+   double GE       = fFormFactor->GetGE(-q_sq);   
+   double GM       = fFormFactor->GetGM(-q_sq);  
+   double W1       = tau*GM*GM;
+   double W2       = (GE*GE + tau*GM*GM)/(1+tau);
+   double W1_tilde = FTilde*W1; 
+   double W2_tilde = FTilde*W2; 
+   // integrand terms
+   // T0 multiplies everything 
+   double T0=0;
+   double T0_num = 2.*fMT; 
+   double T0_den = q_sq*q_sq*(u_0 - u_mag*cos_thk); 
+   if(T0_den!=0) T0 = T0_num/T0_den;
+   // T1 is scaled by W2_tilde 
+   double T1a=0;
+   double T1a_num = (-1.)*(a*electron_mass*electron_mass)*(2.*fEs*(fEp + w) + q_sq/2. );  
+   double T1a_den = pow(x,3);
+   if(T1a_den!=0) T1a = T1a_num/T1a_den; 
+   double T1b=0;
+   double T1b_num = (-1.)*(a_pr*electron_mass*electron_mass)*(2.*fEp*(fEs - w) + q_sq/2. );  
+   double T1b_den = pow(y,3);
+   if(T1b_den!=0) T1b = T1b_num/T1b_den;
+   double T1c = -2.;
+   double T1d_sf=0;                // note this is rewritten to be nicer in code
+   double T1d_sf_num = 2.*v*(y-x);   
+   double T1d_sf_den = x*y; 
+   if(T1d_sf_den!=0) T1d_sf = T1d_sf_num/T1d_sf_den;
+   double T1d = T1d_sf*(electron_mass*electron_mass*(s_dot_p - w*w) + s_dot_p*(2.*fEs*fEp - s_dot_p + w*(fEs-fEp)) ); 
+   double T1e=0; 
+   double T1e_num = 2.*(fEs*fEp + fEs*w + fEp*fEp) + q_sq/2. - s_dot_p - electron_mass*electron_mass;
+   double T1e_den = x; 
+   if(T1e_den!=0) T1e = T1e_num/T1e_den; 
+   double T1f=0; 
+   double T1f_num = 2.*(fEs*fEp - fEp*w + fEs*fEs) + q_sq/2. - s_dot_p - electron_mass*electron_mass;
+   double T1f_den = y; 
+   if(T1f_den!=0) T1f = T1f_num/T1f_den; 
+   double T1 = W2_tilde*(T1a + T1b + T1c + T1d + T1e + T1f);
+   // T2 is scaled by W1_tilde
+   double T2a_sf=0; 
+   double T2a_sf_num = a*pow(y,3) + a_pr*pow(x,3);
+   double T2a_sf_den = pow(x,3)*pow(y,3);
+   if(T2a_sf_den!=0) T2a_sf = T2a_sf_num/T2a_sf_den;
+   double T2a = T2a_sf*electron_mass*electron_mass*(2.*electron_mass*electron_mass + q_sq);
+   double T2b = 4.; 
+   double T2c=0;
+   double T2c_num = 4.*v*(y-x)*s_dot_p*(s_dot_p - 2.*electron_mass*electron_mass);  
+   double T2c_den = x*y;  
+   if(T2c_den!=0) T2c = T2c_num/T2c_den;  
+   double T2d=0;
+   double T2d_num = (y-x)*( 2.*s_dot_p + 2.*electron_mass*electron_mass - q_sq); 
+   double T2d_den = x*y; 
+   if(T2d_den!=0) T2d = T2d_num/T2d_den;  
+   double T2 = W1_tilde*(T2a + T2b + T2c + T2d); 
+   double val = T0*(T1 + T2); 
+   return val;
+}
 //___________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_peakApprox(){
    // Elastic radiative tail using the energy-peaking approximation
@@ -324,7 +434,7 @@ double RadiativeCorrections::sigma_el(double Es){
    if(COS2!=0) TAN2 = SIN2/COS2; 
    double Ep    = Es/(1 + (2.*Es/fMT)*SIN2);
    double Q2    = Kinematics::GetQ2(Es,Ep,fThDeg); 
-   double tau   = Q2/(4.*fMT); 
+   double tau   = Q2/(4.*fMT*fMT); 
    double GE    = fFormFactor->GetGE(Q2);   
    double GM    = fFormFactor->GetGM(Q2);  
    double W1    = tau*GM*GM;

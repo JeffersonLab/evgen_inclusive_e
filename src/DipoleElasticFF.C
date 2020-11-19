@@ -1,4 +1,4 @@
-#include "DipoleElasticFF.h"
+#include "../include/DipoleElasticFF.h"
 //______________________________________________________________________________
 DipoleElasticFF::DipoleElasticFF(){
 
@@ -9,43 +9,23 @@ DipoleElasticFF::~DipoleElasticFF(){
 }
 //______________________________________________________________________________
 double DipoleElasticFF::GetGE(double Q2){
-   double GE=0;
-
-   double tau = Q2/(4.*proton_mass*proton_mass); 
-
-   const int NA  = 1; 
-   double a[NA]  = {-0.21}; 
-   // double da[NA] = {0.064}; 
-   const int NB  = 3;  
-   double b[NB]  = {11.36,18.6,-1.59};    
-   // double db[NB] = {0.45 ,2.88, 0.75};   
-
-   double num = 1.; 
-   for(int i=0;i<NA;i++) num += a[i]*pow(tau,i+1); 
-   double den = 1; 
-   for(int i=0;i<NB;i++) num += b[i]*pow(tau,i+1);
-
-   if(den!=0) GE = num/den;
+   double H[6] = {1.0007,1.01807,1.05584,0.836380,0.6864584,0.672830}; 
+   double P=0;
+   double prod_sum=1;
+   double q = sqrt(Q2)/1000.; //GeV
+   for(int i=0;i<6;i++){
+      for(int j=0;j<6;j++){
+	 if(i!=j) prod_sum *= (q - j)/(i-j);  
+      }
+      P += H[i]*prod_sum;
+      prod_sum = 1;
+   }
+   double GE = P/pow(1. + Q2/0.71E+6,2.); 
    return GE; 
 }
 //______________________________________________________________________________
 double DipoleElasticFF::GetGM(double Q2){
-   double GM=0;
-
-   double tau = Q2/(4.*proton_mass*proton_mass); 
-
-   const int NA  = 1; 
-   double a[NA]  = {0.048}; 
-   // double da[NA] = {0.042}; 
-   const int NB  = 3;  
-   double b[NB]  = {10.35,20.6,0.31};    
-   // double db[NB] = {0.24,0.31,1.34};   
-
-   double num = 1.; 
-   for(int i=0;i<NA;i++) num += a[i]*pow(tau,i+1); 
-   double den = 1; 
-   for(int i=0;i<NB;i++) num += b[i]*pow(tau,i+1);
-
-   if(den!=0) GM = mu_p*num/den;
+   double GE = GetGE(Q2); 
+   double GM = (1. + kappa_p)*GE;
    return GM; 
 }
