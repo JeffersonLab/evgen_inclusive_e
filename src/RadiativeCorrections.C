@@ -306,8 +306,8 @@ double RadiativeCorrections::ElasticTail_sigmaEx(){
    double Ans = Integrate(&RadiativeCorrections::ElasticTail_sigmaEx_Integrand,min,max,epsilon,depth);
    // scale factor 
    double sf=0;
-   double sf_num = ( pow(alpha,3)/(2.*PI) )*fEp; 
-   double sf_den = fEs;
+   double sf_num = pow(alpha,3)*fEp; 
+   double sf_den = 2.*PI*fEs;
    if(sf_den!=0) sf = sf_num/sf_den;  
    return sf*Ans;
 }
@@ -427,7 +427,6 @@ double RadiativeCorrections::ElasticTail_sigmaB(){
    double vp     = wp/(fEp+wp);  
    double vs     = ws/fEs;  
    double Q2     = Kinematics::GetQ2(fEs,fEp,fThDeg); 
-   double Tr     = GetTr(Q2); 
    // first term  
    double T1=0;
    double T1_num = fMT + 2.*(fEs-ws)*SIN2;
@@ -435,7 +434,6 @@ double RadiativeCorrections::ElasticTail_sigmaB(){
    if(T1_den!=0) T1 = T1_num/T1_den; 
    // second term  
    double FTilde = GetFTilde(Q2);
-   double T2_sf  = FTilde*sigma_el(fEs-ws);
    double T2a=0; 
    double T2a_num = fb*fTb*GetPhi(vs);
    double T2a_den = ws; 
@@ -444,17 +442,19 @@ double RadiativeCorrections::ElasticTail_sigmaB(){
    double T2b_num = fXi;
    double T2b_den = 2.*ws*ws; 
    if(T2b_den!=0) T2b = T2b_num/T2b_den;   
-   double T2 = T2_sf*(T2a + T2b);  
+   double T2_sf = FTilde*sigma_el(fEs-ws);
+   double T2    = T2_sf*(T2a + T2b);  
    // third term
-   double T3=0;
-   double T3_sf   = FTilde*sigma_el(fEs);  
+   double T3a=0;
    double T3a_num = fb*fTa*GetPhi(vp); 
    double T3a_den = wp; 
-   if(T3a_den!=0) T3 = T3a_num/T3a_den;
+   if(T3a_den!=0) T3a = T3a_num/T3a_den;
+   double T3b=0; 
    double T3b_num = fXi;
    double T3b_den = 2.*wp*wp; 
    if(T3b_den!=0) T3b = T3b_num/T3b_den;   
-   double T3 = T3_sf*(T3a + T3b);  
+   double T3_sf = FTilde*sigma_el(fEs);  
+   double T3    = T3_sf*(T3a + T3b);  
    // put it together 
    double val = T1*T2 + T3; 
    return val;  
