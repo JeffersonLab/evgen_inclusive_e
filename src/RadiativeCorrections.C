@@ -1,4 +1,4 @@
-#include "RadiativeCorrections.h"
+#include "../include/RadiativeCorrections.h"
 //________________________________________________________________________
 RadiativeCorrections::RadiativeCorrections(){
    Init();
@@ -28,6 +28,22 @@ void RadiativeCorrections::Init(){
    fThreshold = RC::kPion; 
 }
 //_____________________________________________________________________________________________
+void RadiativeCorrections::SetKinematicVariables(double Es,double Ep,double thDeg){
+   // set important variables 
+   fEs    = Es; 
+   fEp    = Ep; 
+   fThDeg = thDeg; 
+}
+//_____________________________________________________________________________________________
+void RadiativeCorrections::CalculateVariables(){
+   // update variables that depend on Es, Ep, th, Ta, Tb  
+   CalculateEta();
+   CalculateB();
+   CalculateXi();
+   CalculateR();
+   CalculateCFACT();
+}
+//_____________________________________________________________________________________________
 double RadiativeCorrections::Radiate(){
    // set important variables 
    fZ     = fInclXS->GetZ();
@@ -42,11 +58,7 @@ double RadiativeCorrections::Radiate(){
       std::cout << "[RadiativeCorrections::Radiate]: WARNING! Radiation lengths are zero! " << std::endl;
    }
 
-   CalculateEta();
-   CalculateB();
-   CalculateXi();
-   CalculateR();
-   CalculateCFACT();
+   CalculateVariables(); 
 
    double BornXS = fInclXS->GetBornXS();
    double AnsEs  = CalculateEsIntegral();
@@ -288,10 +300,18 @@ double RadiativeCorrections::CalculateEpIntegral(){
 double RadiativeCorrections::ElasticTail_exact(){
    // Elastic radiative tail using the exact formalism 
    // Phys. Rev. D 12, 1884 (A62)
+   CalculateVariables(); 
    double Rt       = 1.;  // FIXME: account for radiation from the target.  Eq A59--A61.  
    double sigma_ex = ElasticTail_sigmaEx();
    double sigma_b  = ElasticTail_sigmaB();  
    double fsoft    = GetF_soft();
+   if(fVerbosity>0){
+      std::cout << "[RadiativeCorrections::ElasticTail_exact]: " << std::endl;
+      std::cout << "sigma_ex = " << sigma_ex << " " 
+	        << "sigma_b = "  << sigma_b  << " " 
+	        << "F_soft = "   << fsoft << std::endl;
+      std::cout << "------------------" << std::endl;
+   }
    double el_tail  = fsoft*(sigma_ex*Rt + sigma_b); 
    return el_tail; 
 }
@@ -308,7 +328,7 @@ double RadiativeCorrections::ElasticTail_sigmaEx(){
    double sf=0;
    double sf_num = pow(alpha,3)*fEp; 
    double sf_den = 2.*PI*fEs;
-   if(sf_den!=0) sf = sf_num/sf_den;  
+   if(sf_den!=0) sf = sf_num/sf_den; 
    return sf*Ans;
 }
 //_____________________________________________________________________________________________
@@ -340,7 +360,7 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
    double cos_ths = (s_mag - p_mag*COS)/u_mag;  
    // other variables 
    double w       = 0.5*(u_sq - fMT*fMT)/(u_0  - u_mag*cos_thk);  
-   double q_sq    = 2.*electron_mass*electron_mass - 2.*s_dot_p - 2.*w*u_mag*cos_thk;
+   double q_sq    = 2.*electron_mass*electron_mass - 2.*s_dot_p - 2.*w*(fEs-fEp) + 2.*w*u_mag*cos_thk;
    double a       = w*(fEp - p_mag*cos_thp*cos_thk);
    double a_pr    = w*(fEs - s_mag*cos_ths*cos_thk);
    double b_pr    = (-1.)*w*p_mag*sin_thp*sin_thk;
@@ -402,13 +422,21 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
    double T2d_den = x*y; 
    if(T2d_den!=0) T2d = T2d_num/T2d_den;  
    double T2 = W1_tilde*(T2a + T2b + T2c + T2d); 
-   double val = T0*(T1 + T2); 
+   double val = T0*(T1 + T2);
+   if(fVerbosity>1){
+      std::cout << "[RadiativeCorrections::ElasticTail_sigmaEx_Integrand]: " << std::endl;
+      std::cout << "Es = " << fEs << " Ep = " << fEp << " th = " << fThDeg << " Q2 = " << -q_sq << std::endl; 
+      std::cout << "W1_tilde = " << W1_tilde << " W2_tilde = " << W2_tilde << " " 
+	 << "T0 = " << T0 << " T1 = " << T1 << " T2 = " << T2 << " el_tail = " << val << std::endl; 
+      std::cout << "----------------------" << std::endl; 
+   } 
    return val;
 }
 //___________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_peakApprox(){
    // Elastic radiative tail, peaking approximation 
    // Phys. Rev. D 12, 1884 (A63) 
+   CalculateVariables(); 
    double sigma_p = ElasticTail_sigmaP(); 
    double sigma_b = ElasticTail_sigmaB();
    double fsoft   = GetF_soft();  

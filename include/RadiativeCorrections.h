@@ -22,6 +22,8 @@ namespace RC {
 class RadiativeCorrections {
 
    private:
+      int fVerbosity; 
+
       RC::thrType_t fThreshold;  // integration threshold: elastic or pion 
 
       double fZ,fA;
@@ -58,9 +60,6 @@ class RadiativeCorrections {
       double GetWs(double,double,double); 
       double GetWp(double,double,double);
       double sigma_el(double); 
-      double ElasticTail_sigmaP();    
-      double ElasticTail_sigmaB();    
-      double ElasticTail_sigmaEx();    
       double ElasticTail_sigmaEx_Integrand(const double);    
 
       eInclusiveCrossSection *fInclXS;
@@ -72,10 +71,19 @@ class RadiativeCorrections {
 
       void Init();
       void Print();
+     
+      // use these for testing only 
+      void SetTargetVariables(double Z,double A)       { fZ = Z; fA = A; fMT = A*proton_mass; }  
+      void SetKinematicVariables(double Es,double Ep,double th); 
+      void CalculateVariables();  // compute various variables when Es, Ep, th change
 
-      void SetIntegrationThreshold(RC::thrType_t t) { fThreshold = t; } 
-      void SetTa(double ta) { fTa = ta; }
+      void SetIntegrationThreshold(RC::thrType_t t)    { fThreshold = t; } 
+
+      void SetVerbosity(int v)  { fVerbosity = v; } 
+
       void SetTb(double tb) { fTb = tb; }
+      void SetTa(double ta) { fTa = ta; }
+      void SetRadiationLengths(double tb,double ta)    { fTb = tb; fTa = ta; fT = tb + ta; } 
 
       void SetCrossSection(eInclusiveCrossSection *XS) { fInclXS     = XS; }
       void SetFormFactor(ElasticFormFactor *ff)        { fFormFactor = ff; }
@@ -84,6 +92,11 @@ class RadiativeCorrections {
 
       double ElasticTail_peakApprox();  
       double ElasticTail_exact();  
+
+      double ElasticTail_sigmaP();    
+      double ElasticTail_sigmaB();    
+      double ElasticTail_sigmaEx();    
+
 
 }; 
 

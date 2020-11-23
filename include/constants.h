@@ -34,6 +34,7 @@ const double GF=1.166389E-5;       //GeV^-2
 const double alpha=1.0/137.0359895;
 const double PI=3.14159265;
 
+// mass 
 const double electron_mass=0.511E-3;  // GeV
 const double proton_mass=0.9383;      // GeV
 const double pion_mass=0.140;         // GeV
@@ -41,5 +42,23 @@ const double pion_mass=0.140;         // GeV
 const double deg_to_rad = 1.0/180.0*PI;
 
 const double kappa_p = 1.7927; 
+
+// cross section (in cm^2)  
+const double megabarn	= 1E-18;   
+const double kilobarn	= 1E-21; 
+const double barn	= 1E-24; 
+const double millibarn	= 1E-27; 
+const double microbarn	= 1E-30; 
+const double nanobarn	= 1E-33; 
+const double picobarn	= 1E-36; 
+const double femtobarn	= 1E-39; 
+const double attobarn	= 1E-42; 
+const double zeptobarn	= 1E-45; 
+const double yoctobarn	= 1E-48;
+
+// conversion factors  
+const double MUB_PER_GEV_SR = 389.44E+0;  
+const double NB_PER_GEV_SR  = 389.44E+3;  
+const double PB_PER_GEV_SR  = 389.44E+6;  
 
 #endif
