@@ -81,6 +81,7 @@ class RadiativeCorrections {
       void SetFormFactor(ElasticFormFactor *ff)        { fFormFactor = ff; }
 
       double Radiate();
+
       double ElasticTail_peakApprox();  
       double ElasticTail_exact();  
 

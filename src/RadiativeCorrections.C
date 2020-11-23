@@ -359,7 +359,7 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
    // integrand terms
    // T0 multiplies everything 
    double T0=0;
-   double T0_num = 2.*fMT; 
+   double T0_num = 2.*fMT*w; 
    double T0_den = q_sq*q_sq*(u_0 - u_mag*cos_thk); 
    if(T0_den!=0) T0 = T0_num/T0_den;
    // T1 is scaled by W2_tilde 
@@ -384,7 +384,7 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
    double T1f=0; 
    double T1f_num = 2.*(fEs*fEp - fEp*w + fEs*fEs) + q_sq/2. - s_dot_p - electron_mass*electron_mass;
    double T1f_den = y; 
-   if(T1f_den!=0) T1f = T1f_num/T1f_den; 
+   if(T1f_den!=0) T1f = (-1.)*T1f_num/T1f_den; // NOTE the minus sign!  
    double T1 = W2_tilde*(T1a + T1b + T1c + T1d + T1e + T1f);
    // T2 is scaled by W1_tilde
    double T2a_sf=0; 
