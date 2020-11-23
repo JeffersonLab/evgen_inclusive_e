@@ -419,6 +419,7 @@ double RadiativeCorrections::ElasticTail_peakApprox(){
 double RadiativeCorrections::ElasticTail_sigmaB(){
    // real bremsstrahlung and ionization loss  
    // looks like the angle-peaking approximation (c.f., sigmaP below) 
+   // Phys. Rev. D 12, 1884 (A49) 
    double thr    = fThDeg*deg_to_rad; 
    double SIN    = sin(thr/2.);
    double SIN2   = SIN*SIN;
