@@ -1,4 +1,4 @@
-#include "../include/RadiativeCorrections.h"
+#include "RadiativeCorrections.h"
 //________________________________________________________________________
 RadiativeCorrections::RadiativeCorrections(){
    Init();
@@ -307,19 +307,38 @@ double RadiativeCorrections::ElasticTail_exact(){
    double fsoft    = GetF_soft();
    if(fVerbosity>0){
       std::cout << "[RadiativeCorrections::ElasticTail_exact]: " << std::endl;
+      std::cout << "Es = " << fEs << ", Ep = " << fEp << ", th = " << fThDeg << std::endl;
       std::cout << "sigma_ex = " << sigma_ex << " " 
 	        << "sigma_b = "  << sigma_b  << " " 
 	        << "F_soft = "   << fsoft << std::endl;
-      std::cout << "------------------" << std::endl;
    }
    double el_tail  = fsoft*(sigma_ex*Rt + sigma_b); 
+   return el_tail; 
+}
+//___________________________________________________________________________________
+double RadiativeCorrections::ElasticTail_peakApprox(){
+   // Elastic radiative tail, peaking approximation 
+   // Phys. Rev. D 12, 1884 (A63) 
+   CalculateVariables(); 
+   double sigma_p = ElasticTail_sigmaP(); 
+   double sigma_b = ElasticTail_sigmaB();
+   double fsoft   = GetF_soft();  
+   double el_tail = fsoft*(sigma_p + sigma_b);
+   if(fVerbosity>0){
+      std::cout << "[RadiativeCorrections::ElasticTail_peakApprox]: " << std::endl;
+      std::cout << "Es = " << fEs << ", Ep = " << fEp << ", th = " << fThDeg << std::endl;
+      std::cout << "sigma_p = " << sigma_p  << " "
+                << "sigma_b = " << sigma_b  << " "
+                << "F_soft = "  << fsoft << std::endl;
+   }
+ 
    return el_tail; 
 }
 //_____________________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_sigmaEx(){
    // Elastic radiative tail using the exact formalism 
    // Phys. Rev. D 12, (A24)
-   int depth = 10; 
+   int depth = 20; 
    double epsilon = 1e-10;
    double min = -1; 
    double max =  1; 
@@ -432,17 +451,7 @@ double RadiativeCorrections::ElasticTail_sigmaEx_Integrand(const double cos_thk)
    } 
    return val;
 }
-//___________________________________________________________________________________
-double RadiativeCorrections::ElasticTail_peakApprox(){
-   // Elastic radiative tail, peaking approximation 
-   // Phys. Rev. D 12, 1884 (A63) 
-   CalculateVariables(); 
-   double sigma_p = ElasticTail_sigmaP(); 
-   double sigma_b = ElasticTail_sigmaB();
-   double fsoft   = GetF_soft();  
-   double el_tail = fsoft*(sigma_p + sigma_b); 
-   return el_tail; 
-}
+
 //___________________________________________________________________________________
 double RadiativeCorrections::ElasticTail_sigmaB(){
    // real bremsstrahlung and ionization loss  
