@@ -72,6 +72,7 @@ int FileManager::LoadInputData(const char *inpath,inputParameters_t &par){
       if( data[0].compare("num_evt")==0           ) par.num_evt           = std::atoi( data[1].c_str() ); 
       if( data[0].compare("tgt_A")==0             ) par.tgt_A             = std::atoi( data[1].c_str() ); 
       if( data[0].compare("tgt_Z")==0             ) par.tgt_Z             = std::atoi( data[1].c_str() );
+      if( data[0].compare("scale")==0             ) par.scale             = std::atoi( data[1].c_str() );
       // set up for next line of data 
       data.clear(); 
    }
