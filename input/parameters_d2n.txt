@@ -24,4 +24,6 @@ vx_max                0.100
 vy_min               -0.100        
 vy_max                0.100        
 vz_min               -0.100       
-vz_max                0.100      
+vz_max                0.100   
+# scale factor apply
+scale                 1   
