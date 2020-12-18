@@ -48,13 +48,13 @@ echo $identifier
 #wmax=${identifier:18:3}
 #echo "[q2min-q2max][wmin-wmax] =""["$q2min"-"$q2max"]""["$wmin"-"$wmax"]"
 
-HERE=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-dflay_dev-4
+HERE=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-YT_dev
 echo "starting to submit jobs for $identifier"
 SUBDIR=/volatile/halla/solid/tianye/solid_simulation/submit/${identifier}
 mkdir ${SUBDIR}
-GENEVDIR=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-dflay_dev-4
-MYDIR=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-dflay_dev-4/input 
-OUTDIR=/volatile/halla/solid/tianye/d2n_test
+GENEVDIR=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-YT_dev
+MYDIR=/w/halla-scifs17exp/solid/tianye/solid_simulation/solid/evgen/evgen_inclusive_e-YT_dev/input 
+OUTDIR=/volatile/halla/solid/tianye/d2n_test/${identifier}
 YIELDDIR=${OUTDIR}/ROOT
 LUNDDIR=${OUTDIR}/LUND
 #YIELDDIR=/volatile/clas/claseg3/atrivedi/data/e1f/simulation_2pi/${identifier}/yield
