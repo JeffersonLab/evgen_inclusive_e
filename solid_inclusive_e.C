@@ -134,6 +134,7 @@ char input_gen_file[50];
     std::cout << "vy_max:         " <<  par.vy_max               << std::endl;
     std::cout << "vz_min:         " <<  par.vz_min               << std::endl;
     std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
+    std::cout << "scale:          " <<  par.scale                << std::endl;
 
     delete myFN; 
 
@@ -157,6 +158,7 @@ char input_gen_file[50];
 	const double vertex_z_min=par.vz_min;   //cm
 	const double vertex_z_max=par.vz_max;  //cm
 	const int num_evt=par.num_evt;    //number of event to generate within the phase space
+	const int scale_status=par.scale;    //0:no scale factor on cross sections; 1: applying a scale factor on cross sections
 	string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
 	string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
@@ -236,6 +238,8 @@ char input_gen_file[50];
 	// load unpol pdf	
 	LHAPDF::PDF* unpol_pdf=LHAPDF::mkPDF(unpol_pdfset_name, unpol_pdf_file_id);
 	cout<<"# YX : unpolarized PDF set is loaded......using "<<unpol_pdfset_name<<endl;
+        // scale factor 
+	cout<<"Scale factor is loaded......using "<<scale_status<<endl;
 	
 
 	//print some information
@@ -271,6 +275,7 @@ char input_gen_file[50];
 	double theta=0;
 	double phi=0;
         double Nu=0;
+        double factor=0;
 	TFile *myfile=new TFile(name_rootfile_output,"RECREATE");
 	TTree *T=new TTree("T","T");
 	T->Branch("Abeam", &Abeam, "data/D");
@@ -345,6 +350,11 @@ char input_gen_file[50];
 		if(x>=0 && x<=1){
 		
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
+                        if(scale_status==1){
+                        factor=0.906-0.00699*E;
+                        }else{
+                        factor=1.0;
+                        }
 			//xs in unit of mub/GeV-sr
 			//dXSdEdOmega_mubGeVSr = xs;
 			//xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
@@ -357,11 +367,12 @@ char input_gen_file[50];
                         NoRdXSDEdOmega.SetEp(Ep);
                         NoRdXSDEdOmega.SetTh(theta);
                         NoRdXSDEdOmega.Setpdf(unpol_pdf);
+                        NoRdXSDEdOmega.SetScale(factor);
                         // cout<<"dXSdEdOmega="<<dXSdEdOmega_mubGeVSr<<endl;
                          noXS=&NoRdXSDEdOmega;
                          double noradCross=noXS->GetBornXS();
 			dXSdEdOmega_mubGeVSr = noradCross; 
-                        // cout<<"noradCross="<<noradCross<<endl;
+                        // cout<<"noradCross="<<noradCross<<"xs="<<xs<<endl;
                          RadiativeCorrections rad;
                          rad.SetTa(0.0362);
                          rad.SetTb(0.00293); 
