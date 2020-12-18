@@ -25,3 +25,5 @@ vy_min               -0.25
 vy_max                0.25       
 vz_min               -10.00       
 vz_max               30.000      
+# scale factor apply
+scale                 1   
