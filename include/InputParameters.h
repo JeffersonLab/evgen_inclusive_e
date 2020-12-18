@@ -27,13 +27,14 @@ typedef struct inputParameters {
    int num_evt;                   // number of events  
    int tgt_Z;                     // target Z: number of protons       
    int tgt_A;                     // target A: atomic mass (= Z + N)
+   int scale;                     // 0: no scale factor, 1:apply a scale factor on the cross sections
 
    // constructor 
    inputParameters(): 
       output_name("NONE"),pol_pdfset_name("NONE"),pol_pdfset_ID("0000"),unpol_pdfset_name("NONE"),unpol_pdfset_ID("0000"),
       lumi(0),E_beam(0),theta_min(0),theta_max(0),Ep_min(0),Ep_max(0),
       vx_min(0),vx_max(0),vy_min(0),vy_max(0),vz_min(0),vz_max(0),
-      num_evt(0),tgt_Z(0),tgt_A(0) 
+      num_evt(0),tgt_Z(0),tgt_A(0),scale(0) 
    {}
 
 } inputParameters_t; 

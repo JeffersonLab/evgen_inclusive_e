@@ -35,6 +35,7 @@ class eInclusiveCrossSection{
       double fZ,fA;
       double fEs,fEp,fTh;
       PDF *fpdf; 
+      double fscale;
       void Init();
 
    public:
@@ -47,6 +48,7 @@ class eInclusiveCrossSection{
       void SetEs(double v) { fEs = v; }
       void SetEp(double v) { fEp = v; }
       void Setpdf(PDF* v)  { fpdf= v; }
+      void SetScale(double v)  { fscale= v; }
       double GetZ()  const { return fZ;  }
       double GetA()  const { return fA;  }
       double GetEs() const { return fEs; }
