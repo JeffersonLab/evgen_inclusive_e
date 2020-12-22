@@ -1,7 +1,16 @@
 #ifndef CONSTANTS_YX_H
 #define CONSTANTS_YX_H
 
+namespace RC {
+   namespace Target {
+      enum targType_t { kProton, kNeutron, kH2, kH3, kHe3 };
+   }
+}
+
 const double HBAR_C = 624.4197;  // in GeV*nb^(1/2)
+
+const double hc_micrometer = 1.23984193;            // h*c in eV*um 
+const double hc_meter      = hc_micrometer*1E-6;    // h*c in eV*m 
 
 const double mu_p=2.793; 
 const double mu_n=-1.913;  

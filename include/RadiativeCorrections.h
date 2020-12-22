@@ -1,5 +1,5 @@
-#ifndef EVGEN_INCLUSIVE_E_RADIATIVE_CORRECTIONS_HH
-#define EVGEN_INCLUSIVE_E_RADIATIVE_CORRECTIONS_HH
+#ifndef RADIATIVE_CORRECTIONS_HH
+#define RADIATIVE_CORRECTIONS_HH
 
 // a class for applying radiative effects to cross section models, 
 // or unfolding radiative effects from experimental cross section data 
@@ -13,10 +13,10 @@
 #include "Kinematics.h"
 #include "eInclusiveCrossSection.h" 
 #include "ElasticFormFactor.h"
-// #include "F1F209.h"
 
 namespace RC {
-   enum thrType_t { kElastic, kPion }; 
+   enum thrType_t  { kElastic, kPion }; 
+   enum unitType_t { kMicrobarnPerGeVPerSr, kNanobarnPerGeVPerSr, kPicobarnPerGeVPerSr }; 
 } 
 
 class RadiativeCorrections {
@@ -24,7 +24,8 @@ class RadiativeCorrections {
    private:
       int fVerbosity; 
 
-      RC::thrType_t fThreshold;  // integration threshold: elastic or pion 
+      RC::thrType_t fThreshold;  // integration threshold: elastic or pion
+      RC::unitType_t fUnit;  
 
       double fZ,fA;
       double fDeltaE;
@@ -56,11 +57,17 @@ class RadiativeCorrections {
       double AdaptiveSimpsonAux(double (RadiativeCorrections::*)(const double),double,double,double,double,double,double,double,int);
 
       // elastic tail 
-      double GetF_soft(); 
       double GetWs(double,double,double); 
       double GetWp(double,double,double);
-      double sigma_el(double); 
-      double ElasticTail_sigmaEx_Integrand(const double);    
+      double sigma_el(double Es); 
+      double sigma_el_tilde(double Es); 
+      double ElasticTail_sigmaEx_Integrand(const double);   
+
+      // elastic peak kinematic factors 
+      double GetX(double Es,double th); 
+      double GetRho(double Es,double th); 
+      double GetEta(double Es,double th); 
+      double GetEta_MTS(double Es,double th); 
 
       eInclusiveCrossSection *fInclXS;
       ElasticFormFactor *fFormFactor;
@@ -71,15 +78,10 @@ class RadiativeCorrections {
 
       void Init();
       void Print();
-     
-      // use these for testing only 
-      void SetTargetVariables(double Z,double A)       { fZ = Z; fA = A; fMT = A*proton_mass; }  
-      void SetKinematicVariables(double Es,double Ep,double th); 
-      void CalculateVariables();  // compute various variables when Es, Ep, th change
 
+      void SetUnits(RC::unitType_t u)                  { fUnit = u; };
       void SetIntegrationThreshold(RC::thrType_t t)    { fThreshold = t; } 
-
-      void SetVerbosity(int v)  { fVerbosity = v; } 
+      void SetVerbosity(int v)                         { fVerbosity = v; } 
 
       void SetTb(double tb) { fTb = tb; }
       void SetTa(double ta) { fTa = ta; }
@@ -89,14 +91,38 @@ class RadiativeCorrections {
       void SetFormFactor(ElasticFormFactor *ff)        { fFormFactor = ff; }
 
       double Radiate();
-
       double ElasticTail_peakApprox();  
       double ElasticTail_exact();  
-
+     
+      // use these for testing only 
+      void SetTargetVariables(double Z,double A)       { fZ = Z; fA = A; fMT = A*proton_mass; }  
+      void SetKinematicVariables(double Es,double Ep,double th); 
+      void CalculateVariables();  // compute various variables when Es, Ep, th change
+      double GetF_soft(); 
+    
+      // for testing.  will be private once things are finalized 
       double ElasticTail_sigmaP();    
       double ElasticTail_sigmaB();    
-      double ElasticTail_sigmaEx();    
+      double ElasticTail_sigmaEx();   
 
+      // Mo & Tsai 
+      double ElasticPeak_Delta_MTS();  
+      double ElasticPeak_Z0_MTS();  
+      double ElasticPeak_Z1_MTS();  
+      double ElasticPeak_Z2_MTS();  
+
+      // Meister and Yennie  
+      double ElasticPeak_Delta_MY();  
+      double ElasticPeak_Z0_MY();  
+      double ElasticPeak_Z1_MY();  
+      double ElasticPeak_Z2_MY();  
+      
+      // Maximon and Tjon  
+      double ElasticPeak_Delta_MTJ_E1THDE(double Es,double th,double deltaE);  
+      double ElasticPeak_Z0_MTJ(double Es,double th,double deltaE);  
+      double ElasticPeak_Z1_MTJ(double Es,double th,double deltaE);  
+      double ElasticPeak_Z2_MTJ(double Es,double th,double deltaE);  
+      double ElasticPeak_DeltaEl_MTJ();  
 
 }; 
 
