@@ -27,3 +27,5 @@ vz_min               -370
 vz_max               -330      
 # scale factor apply
 scale                 1   
+# Radiative Rate
+rad                   1   

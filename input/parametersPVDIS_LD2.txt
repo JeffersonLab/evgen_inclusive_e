@@ -1,5 +1,5 @@
 # number of events
-num_evt               10000 
+num_evt               100 
 # file name 
 output_name           gen_LD2.root      
 # PDF model names
@@ -27,3 +27,5 @@ vz_min               -10.00
 vz_max               30.000      
 # scale factor apply
 scale                 1   
+# Radiative Rate
+rad                   1   
