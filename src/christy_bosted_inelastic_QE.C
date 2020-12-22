@@ -384,7 +384,7 @@ int resmodd(double w2, double q2,
 
     sig = 0.;
 
-    if(w2 < 1.07327*1.07327 || w2 > 25 || q2 < 0.0 || q2 > 11.0) {
+    if(w2 < 1.07327*1.07327 || w2 > 25 || q2 < 0.0 || q2 > 13) {
 	std::cout << "ERROR: " << __FILE__ << " line " << __LINE__ << std::endl;	
 	std::cout << " W2/Q2 check failed: should be 1.07327^2<W2<25 and 0 < Q2 < 11" << std::endl;
 	std::cout << "   but are w2 q2: " << w2 << " " << q2 << std::endl;

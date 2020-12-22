@@ -30,9 +30,8 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 	double x=Q2/2.0/proton_mass/Nu;
 	// double y=Nu/E;
 	double W2=proton_mass * proton_mass + 2 * proton_mass * Nu - Q2;
-	
 	double F1=0,F2=0,xs=0,r=0;
-	if(W2<3.0*3.0){  //use PB model
+	if(W2<3.0*3.0 && Q2<12){  //use PB model
 		F1F2IN09(Z, A, Q2, W2, F1, F2, r);
 	}else if(W2>=3.0*3.0){ //use pdf sets
 		double F1p=calculate_proton_F1g(unpol_pdf,  x,  Q2);  //proton 
