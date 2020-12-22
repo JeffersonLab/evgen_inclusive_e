@@ -135,6 +135,7 @@ char input_gen_file[50];
     std::cout << "vz_min:         " <<  par.vz_min               << std::endl;
     std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
     std::cout << "scale:          " <<  par.scale                << std::endl;
+    std::cout << "rad:            " <<  par.rad                  << std::endl;
 
     delete myFN; 
 
@@ -157,8 +158,9 @@ char input_gen_file[50];
 	const double vertex_y_max=par.vy_max;   //cm
 	const double vertex_z_min=par.vz_min;   //cm
 	const double vertex_z_max=par.vz_max;  //cm
-	const int num_evt=par.num_evt;    //number of event to generate within the phase space
+	const int  num_evt=par.num_evt;    //number of event to generate within the phase space
 	const int scale_status=par.scale;    //0:no scale factor on cross sections; 1: applying a scale factor on cross sections
+	const int rad_status=par.rad;    //0 Born cross sections; 1:Radiative cross section to get rate  
 	string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
 	string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
@@ -240,6 +242,8 @@ char input_gen_file[50];
 	cout<<"# YX : unpolarized PDF set is loaded......using "<<unpol_pdfset_name<<endl;
         // scale factor 
 	cout<<"Scale factor is loaded......using "<<scale_status<<endl;
+        // radiative rate 
+	cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
 	
 
 	//print some information
@@ -348,7 +352,7 @@ char input_gen_file[50];
 
 		
 		if(x>=0 && x<=1){
-		
+                         
 			xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
                         if(scale_status==1){
                         factor=0.906-0.00699*E;
@@ -384,9 +388,13 @@ char input_gen_file[50];
 			xs=noradCross*(d_E*d_omiga/num_evt);  //in unit of mub now
 			radxs=radCross*(d_E*d_omiga/num_evt);  //in unit of mub now
                         //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;
-	
+                        if(rad_status==0){	
 			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-			
+                         //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
+                        }else{
+			rate = radxs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
+                        // cout<<"rad rate="<<rate<<"radxs="<<radxs<<endl;
+			}
 			//calculate PVDIS asymmetries Abeam and AL
 			//proton
 			double A_beam_proton=calculate_proton_Abeam(unpol_pdf,  x,  Q2,  y);
