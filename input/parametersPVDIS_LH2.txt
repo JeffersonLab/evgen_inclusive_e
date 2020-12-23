@@ -29,3 +29,7 @@ vz_max               30.000
 scale                 1   
 # Radiative Rate
 rad                   1   
+# Radiative effects before vertex
+RLb                   2.36E-02   
+# Radiative effects after vertex
+RLa                   0   

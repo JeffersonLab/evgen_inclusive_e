@@ -1,5 +1,5 @@
 # number of events
-num_evt               10000 
+num_evt               10 
 # file name 
 output_name           gen_d2n.root      
 # PDF model names
@@ -27,3 +27,9 @@ vz_min               -0.100
 vz_max                0.100   
 # scale factor apply
 scale                 1   
+# Radiative Rate
+rad                   1   
+# Radiative effects before vertex
+RLb                   2.93E-03   
+# Radiative effects after vertex
+RLa                   3.62E-02   
