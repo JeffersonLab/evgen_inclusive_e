@@ -136,6 +136,8 @@ char input_gen_file[50];
     std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
     std::cout << "scale:          " <<  par.scale                << std::endl;
     std::cout << "rad:            " <<  par.rad                  << std::endl;
+    std::cout << "RLb:            " <<  par.RLb                  << std::endl;
+    std::cout << "RLa:            " <<  par.RLa                  << std::endl;
 
     delete myFN; 
 
@@ -161,6 +163,8 @@ char input_gen_file[50];
 	const int  num_evt=par.num_evt;    //number of event to generate within the phase space
 	const int scale_status=par.scale;    //0:no scale factor on cross sections; 1: applying a scale factor on cross sections
 	const int rad_status=par.rad;    //0 Born cross sections; 1:Radiative cross section to get rate  
+	const double RL_before=par.RLb;   //radiation length before vertex 
+	const double RL_after=par.RLa;   //radiation length after vertex 
 	string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
 	string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
@@ -244,6 +248,9 @@ char input_gen_file[50];
 	cout<<"Scale factor is loaded......using "<<scale_status<<endl;
         // radiative rate 
 	cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
+        // radiative effects before vertex 
+	cout<<"Tb is loaded......using "<<RL_before<<endl;
+	cout<<"Ta is loaded......using "<<RL_after<<endl;
 	
 
 	//print some information
@@ -378,8 +385,8 @@ char input_gen_file[50];
 			dXSdEdOmega_mubGeVSr = noradCross; 
                         // cout<<"noradCross="<<noradCross<<"xs="<<xs<<endl;
                          RadiativeCorrections rad;
-                         rad.SetTa(0.0362);
-                         rad.SetTb(0.00293); 
+                         rad.SetTa(RL_after);
+                         rad.SetTb(RL_before); 
                          rad.SetCrossSection(noXS); 
                          double radCross=rad.Radiate();
                         // cout<<"radCross="<<radCross<<endl;
