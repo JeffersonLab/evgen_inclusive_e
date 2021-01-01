@@ -50,14 +50,16 @@ You need to put your ROOT and LHAPDF6 path if compiling on other machine
 >cmake .
 >make
 
-==== run it ====
+==== run it and use output ====
 
 > source setup
 >./solid_inclusive_e inputfile
 
-you will get a txt file in lund format and a rootfile in the current directory
-
 see inputfile example under input dir
+"rad 0" to turn off radiative correction
+"rad 1" to turn on radiative correction (running speed 0.15s/event)
+
+a rootfile and a txt file in lund format will be produced in the current directory
 
 compare_eDIS_eAll.C is used to compare output root files between 
 "eDIS" from https://github.com/JeffersonLab/evgen_inclusive

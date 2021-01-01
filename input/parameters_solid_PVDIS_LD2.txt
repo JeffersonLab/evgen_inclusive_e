@@ -27,9 +27,9 @@ vz_min               -10.00
 vz_max               30.000      
 # scale factor apply
 scale                 1   
-# Radiative Rate
+# Radiative  switch, 0 off, 1 on
 rad                   1   
-# Radiative effects before vertex
+# Radiative length before vertex (using half of target length)
 RLb                   2.81E-02   
-# Radiative effects after vertex
+# Radiative length after vertex (using half of target length)
 RLa                   0   

@@ -96,18 +96,20 @@ int  main(Int_t argc, char *argv[])
 char input_gen_file[50]; 
 	    strcpy(input_gen_file,argv[1]);
     std::string str;
-    std::string substring;
+//     std::string substring;
     str = input_gen_file;
-    substring=str.substr(str.find("_")+1,3);
-    std::cout<<"name"<< substring <<std::endl;
+//     substring=str.substr(str.find("_")+1,3);
+//     std::cout<<"name"<< substring <<std::endl;
+    std::cout<<"input file "<< str <<std::endl;
+    std::cout<<std::endl;        
   //std::string outname(22,input_gen_file);
   //  std::cout << "input_file:        " << outname             << std::endl;
     // test the radiative correction class
-    std::cout << "Creating RadiativeCorrection object..." << std::endl; 
-    RadiativeCorrections *myRC = new RadiativeCorrections(); 
-    std::cout << "--> Done!" << std::endl;
-    delete myRC; 
-    std::cout << "--> Deleted RC object" << std::endl;
+//     std::cout << "Creating RadiativeCorrection object..." << std::endl; 
+//     RadiativeCorrections *myRC = new RadiativeCorrections(); 
+//     std::cout << "--> Done!" << std::endl;
+//     delete myRC; 
+//     std::cout << "--> Deleted RC object" << std::endl;
 
     inputParameters_t par; 
     FileManager *myFN = new FileManager();
@@ -193,7 +195,8 @@ char input_gen_file[50];
 	
 	//output lund file
 	ofstream OUTPUT_lund;
-	OUTPUT_lund.open(Form("gen_%s.lund",substring.data()));
+	TString name_rootfile_output_s=name_rootfile_output;
+	OUTPUT_lund.open(name_rootfile_output_s.ReplaceAll("root","lund").Data());	
 	if(!OUTPUT_lund){
 		cout<<"error! can't open lund output!"<<endl;
 	}
@@ -255,12 +258,12 @@ char input_gen_file[50];
 
 	//print some information
 	vector<int> pol_pids=pol_pdf->flavors();
-	for(int i=0; i<pol_pids.size();i++){
+	for(int i=0; i<int(pol_pids.size());i++){
 		 cout<<"# YX  : (pol pids) "<<i<<"	"<<pol_pids[i]<<endl;
 	}
 	
 	vector<int> unpol_pids=unpol_pdf->flavors();
-	for(int i=0; i<unpol_pids.size();i++){
+	for(int i=0; i<int(unpol_pids.size());i++){
 		 cout<<"# YX  : (unpol pids) "<<i<<"	"<<unpol_pids[i]<<endl;
 	}
 	
@@ -273,7 +276,8 @@ char input_gen_file[50];
 	//##################################################################################               
 	
 	//TTree to save
-	double Abeam=0, AL=0, x=0, y=0, W=0, Q2=0, rate=0,rate_pre=0;
+	double Abeam=0, AL=0, x=0, y=0, W=0, Q2=0, rate=0,raterad=0;
+// 	rate_pre=0;
 	int charge=-1, particle_id=11;
 	double px=0, py=0, pz=0;
 	double Ep=0;
@@ -282,7 +286,7 @@ char input_gen_file[50];
 	double xs=0; 
 	double dXSdEdOmega_mubGeVSr=0; // differential cross section 
 	double radxs=0; 
-	double raddXSdEdOmega_mubGeVSr=0; // differential cross section 
+	double raddXSdEdOmega_mubGeVSr=0; // differential cross section with radiative correction
 	double theta=0;
 	double phi=0;
         double Nu=0;
@@ -295,7 +299,9 @@ char input_gen_file[50];
 	T->Branch("y", &y, "data/D");
 	T->Branch("W", &W, "data/D");
 	T->Branch("Q2", &Q2, "data/D");
-	T->Branch("rate_pre", &rate_pre, "data/D");       //before normalized
+// 	T->Branch("rate_pre", &rate_pre, "data/D");       //before normalized
+	T->Branch("rate", &rate, "data/D");
+	T->Branch("raterad", &rate, "data/D");	
 	T->Branch("charge",&charge,"data/I");
 	T->Branch("particle_id",&particle_id,"data/I");
 	T->Branch("px",&px, "data/D");
@@ -384,22 +390,22 @@ char input_gen_file[50];
                          double noradCross=noXS->GetBornXS();
 			dXSdEdOmega_mubGeVSr = noradCross; 
                         // cout<<"noradCross="<<noradCross<<"xs="<<xs<<endl;
+                        if(rad_status==0){	
+			  //xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
+			  xs=noradCross*(d_E*d_omiga/num_evt);  //in unit of mub now
+			  //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;			  
+			  rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
+			  //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
+                        }else{
                          RadiativeCorrections rad;
                          rad.SetTa(RL_after);
                          rad.SetTb(RL_before); 
                          rad.SetCrossSection(noXS); 
                          double radCross=rad.Radiate();
                         // cout<<"radCross="<<radCross<<endl;
-                         raddXSdEdOmega_mubGeVSr=radCross; 
-			//xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
-			xs=noradCross*(d_E*d_omiga/num_evt);  //in unit of mub now
-			radxs=radCross*(d_E*d_omiga/num_evt);  //in unit of mub now
-                        //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;
-                        if(rad_status==0){	
-			rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-                         //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
-                        }else{
-			rate = radxs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
+			  raddXSdEdOmega_mubGeVSr=radCross; 
+			  radxs=radCross*(d_E*d_omiga/num_evt);  //in unit of mub now			 
+			  raterad = radxs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
                         // cout<<"rad rate="<<rate<<"radxs="<<radxs<<endl;
 			}
 			//calculate PVDIS asymmetries Abeam and AL
@@ -418,7 +424,7 @@ char input_gen_file[50];
 		T->Fill();
 
 		//output to lund file
-		OUT << "1" << " \t " << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << " \t " << 0  << " \t " << 0  << " \t "  << Abeam <<" \t " << AL << endl;
+		OUTPUT_lund << "1" << " \t " << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << " \t " << raterad  << " \t " << 0  << " \t "  << Abeam <<" \t " << AL << endl;
 		
 		//output to lund file (old format)
 // 		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
