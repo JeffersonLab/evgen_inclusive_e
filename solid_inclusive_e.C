@@ -418,7 +418,11 @@ char input_gen_file[50];
 		T->Fill();
 
 		//output to lund file
-		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
+		OUT << "1" << " \t " << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << " \t " << 0  << " \t " << 0  << " \t "  << Abeam <<" \t " << AL << endl;
+		
+		//output to lund file (old format)
+// 		OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
+
 		OUTPUT_lund << " \t " << "1" << " \t " << charge << " \t " << "1" << " \t " << particle_id << " \t " << "0" << " \t " << "0" << " \t " << px << " \t " << py << " \t " << pz << " \t " << Ep << " \t " << mass<<" \t " << vx  << " \t " << vy << " \t " << vz << endl;
 		}  // save something physical for DIS events
 	} //end for

@@ -6,9 +6,17 @@ The W<3 GeV region uses Peter Bosted fit
 the W>3 GeV region uses world PDF sets, the LHAPDF6 interface is used
 refer to http://hallaweb.jlab.org/12GeV/SoLID/download/sim/talk/Inclusive_electron_generator.pdf
 
-Please send questions Yuxiang Zhao (yxzhao@jlab.org), Zhiwen Zhao (zwzhao@jlab.org)
-2020/04 svn2root by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evgen/solid_inclusive_e/
-2017/02/13 First checkin 
+Please send questions Zhiwen Zhao (zwzhao@jlab.org), Ye Tian (tainye@jlab.org)
+
+==== log =================================
+2020/12/31 
+adding radiative correction and input file by David Flay and Ye Tian
+
+2020/04/24 commit "4b22e1b"
+convert to github by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evgen/solid_inclusive_e
+
+2017/02/13 
+written by Yuxiang Zhao (yxzhao@jlab.org)
 
 ====install========================
 It requires ROOT and LHAPDF6
@@ -34,29 +42,26 @@ make sure boost packages are installed by checking "rpm -qa |grep boost"
 > wget http://www.hepforge.org/archive/lhapdf/pdfsets/v6.backup/6.1.6/cteq66.tar.gz
 > tar zxf cteq66.tar.gz
 
-*** How to compile it ******
-You need to put your ROOT and LHAPDF6 path in "setup" which has the default installation on ifarm1901
+*** compile it ******
+The current setup file has default ROOT and LHAPDF6 path on ifarm
+You need to put your ROOT and LHAPDF6 path if compiling on other machine
 
 >source setup
 >cmake .
 >make
 
-==== run it =======
-You need to put ROOT and LHAPDF6 path in "setup" which has the default installation on ifarm1901
+==== run it ====
 
 > source setup
->./solid_inclusive_e outputfilename number_of_event
+>./solid_inclusive_e inputfile
 
-you will get a txt file in lund format and a rootfile outputs in the current directory
-Their name would be like "gen_outputfilename.lund" and "gen_outputfilename.root"
+you will get a txt file in lund format and a rootfile in the current directory
 
-==== change target and pdf =================
+see inputfile example under input dir
 
-At this moment, you have to manually change target setup at the beginning of solid_inclusive_e.C
-
-And you can change pdf there also
-
-We will add functionality to read an input file later
+compare_eDIS_eAll.C is used to compare output root files between 
+"eDIS" from https://github.com/JeffersonLab/evgen_inclusive
+"eAll" from https://github.com/JeffersonLab/evgen_inclusive_e 
 
 ==== code details ==================
 pure C/C++ code, using CMake compiler

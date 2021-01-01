@@ -1,17 +1,17 @@
 # number of events
 num_evt               10000 
 # file name 
-output_name           gen_LD2.root      
+output_name           gen.root      
 # PDF model names
 pol_pdfset_name       NNPDFpol11_100       
 pol_pdfset_ID         0000       
 unpol_pdfset_name     CT14nlo    
 unpol_pdfset_ID       0000       
 # target settings 
-tgt_Z                 1     
-tgt_A                 1 
+tgt_Z                 2     
+tgt_A                 3 
 # luminosity  
-lumi                  1.2E+37
+lumi                  1E+36 
 # kinematics  
 E_beam                11   
 theta_min             0     
@@ -23,7 +23,13 @@ vx_min               -0.25
 vx_max                0.25      
 vy_min               -0.25        
 vy_max                0.25        
-vz_min               -322.50       
-vz_max               -307.50     
+vz_min               -370       
+vz_max               -330      
 # scale factor apply
 scale                 1   
+# Radiative Rate
+rad                   1   
+# Radiative effects before vertex
+RLb                   2.1E-03   
+# Radiative effects after vertex
+RLa                   0   
