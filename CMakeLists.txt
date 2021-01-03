@@ -53,6 +53,6 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
 #----------------------------------------------------------------------------
 # Add the executable
-add_executable(solid_inclusive_e solid_inclusive_e.C ${sources} ${headers})
-target_link_libraries(solid_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
+add_executable(evgen_inclusive_e evgen_inclusive_e.C ${sources} ${headers})
+target_link_libraries(evgen_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
 

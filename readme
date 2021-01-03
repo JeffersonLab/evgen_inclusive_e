@@ -19,11 +19,11 @@ convert to github by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evg
 written and tested with LHAPDF6.1.6 by Yuxiang Zhao (yxzhao@jlab.org)
 
 ====install========================
-It requires ROOT and LHAPDF6.1.6 (NNPDFpol11_100 and CT14nlo)
+It requires ROOT5.34.36 and LHAPDF6.1.6 with pdfsets of NNPDFpol11_100 and CT14nlo at least
 (see how to install LHAPDF6.1.6 below)
 
-The current setup file has default ROOT and LHAPDF6.1.6 path on ifarm
-You need to put your ROOT and LHAPDF6.1.6 path if compiling on other machine
+The current setup file has default ROOT and LHAPDF6 path on ifarm
+You need to put your ROOT and LHAPDF6 path if compiling on other machine
 
 >source setup
 >cmake .
@@ -32,7 +32,7 @@ You need to put your ROOT and LHAPDF6.1.6 path if compiling on other machine
 ==== run it and understand output ====
 
 > source setup
->./solid_inclusive_e inputfile
+>./evgen_inclusive_e inputfile
 
 see inputfile example under input dir
 "rad 0" to turn off radiative correction
@@ -47,7 +47,7 @@ compare_eDIS_eAll.C is used to compare output root files between
 ==== code details ==================
 pure C/C++ code, using CMake compiler
 
-The main code "solid_inclusive_e.C" is segmented into several regions:
+The main code "evgen_inclusive_e.C" is segmented into several regions:
 1. user inputs for the simulation -> define the simulation parameters
 2. load polpodf and unpolpdfs for W>3 GeV region ->user doesn't need to deal with it normally
 3. Define outputs, lund output and tree definition  -> user can modify it according to the needs

@@ -390,13 +390,12 @@ char input_gen_file[50];
                          double noradCross=noXS->GetBornXS();
 			dXSdEdOmega_mubGeVSr = noradCross; 
                         // cout<<"noradCross="<<noradCross<<"xs="<<xs<<endl;
-                        if(rad_status==0){	
 			  //xs=xs*(d_E*d_omiga/num_evt);  //in unit of mub now
 			  xs=noradCross*(d_E*d_omiga/num_evt);  //in unit of mub now
 			  //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;			  
 			  rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-			  //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
-                        }else{
+			  //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;			
+                        if(rad_status==1){	
                          RadiativeCorrections rad;
                          rad.SetTa(RL_after);
                          rad.SetTb(RL_before); 
