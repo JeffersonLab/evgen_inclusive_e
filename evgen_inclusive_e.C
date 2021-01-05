@@ -138,6 +138,7 @@ char input_gen_file[50];
     std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
     std::cout << "scale:          " <<  par.scale                << std::endl;
     std::cout << "rad:            " <<  par.rad                  << std::endl;
+    std::cout << "RL:            " <<  par.RL                  << std::endl;    
     std::cout << "RLb:            " <<  par.RLb                  << std::endl;
     std::cout << "RLa:            " <<  par.RLa                  << std::endl;
 
@@ -164,9 +165,10 @@ char input_gen_file[50];
 	const double vertex_z_max=par.vz_max;  //cm
 	const int  num_evt=par.num_evt;    //number of event to generate within the phase space
 	const int scale_status=par.scale;    //0:no scale factor on cross sections; 1: applying a scale factor on cross sections
-	const int rad_status=par.rad;    //0 Born cross sections; 1:Radiative cross section to get rate  
-	const double RL_before=par.RLb;   //radiation length before vertex 
-	const double RL_after=par.RLa;   //radiation length after vertex 
+	const int rad_status=par.rad;    //0 Born cross section only; 1:Radiative cross section with smearing; 2:Radiative cross section without smearing
+	const double RL=par.RL;   //radiation length of target 	
+	double RL_before=par.RLb;   //radiation length before target 
+	double RL_after=par.RLa;   //radiation length after target 
 	string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
 	string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name	
@@ -252,8 +254,8 @@ char input_gen_file[50];
         // radiative rate 
 	cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
         // radiative effects before vertex 
-	cout<<"Tb is loaded......using "<<RL_before<<endl;
-	cout<<"Ta is loaded......using "<<RL_after<<endl;
+// 	cout<<"Tb is loaded......using "<<RL_before<<endl;
+// 	cout<<"Ta is loaded......using "<<RL_after<<endl;
 	
 
 	//print some information
@@ -394,8 +396,11 @@ char input_gen_file[50];
 			  xs=noradCross*(d_E*d_omiga/num_evt);  //in unit of mub now
 			  //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;			  
 			  rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-			  //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;			
-                        if(rad_status==1){	
+			  //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;	
+			 
+                        if(rad_status>0){	
+                         if(rad_status==1) RL_before=RL_before+(vz-vertex_z_min)/(vertex_z_max-vertex_z_min)*RL;
+                         if(rad_status==2) RL_before=RL_before+0.5*RL;			   				  
                          RadiativeCorrections rad;
                          rad.SetTa(RL_after);
                          rad.SetTb(RL_before); 

@@ -10,7 +10,7 @@ Please send questions Zhiwen Zhao (zwzhao@jlab.org), Ye Tian (tainye@jlab.org)
 
 ==== log =================================
 2021/01/01 commit "6f26734"
-adding radiative correction and input file by David Flay and Ye Tian, small adjustment by Zhiwen Zhao
+adding unpolarized radiative correction and input file by David Flay and Ye Tian, output adjustment by Zhiwen Zhao
 
 2020/04/24 commit "4b22e1b"
 convert to github by Zhiwen Zhao from https://jlabsvn.jlab.org/svnroot/solid/evgen/solid_inclusive_e
@@ -35,8 +35,8 @@ You need to put your ROOT and LHAPDF6 path if compiling on other machine
 >./evgen_inclusive_e inputfile
 
 see inputfile example under input dir
-"rad 0" to turn off radiative correction
-"rad 1" to turn on radiative correction (running speed 0.15s/event)
+rad: 0 Born cross section only; 1:unpolarized radiative cross section with smearing; 2:unpolarized radiative cross section without smearing
+(radiative code is slow about 0.15s/event)
 
 a rootfile and a txt file in lund format will be produced in the current directory
 
