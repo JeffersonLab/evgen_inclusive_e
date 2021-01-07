@@ -34,5 +34,5 @@ RL                    5.4e-2
 # Radiative length before target
 RLb                   1.35e-3   
 # Radiative length after target
-RLa                   6.8e-3  
+RLa                   1e-2  
 #refer to https://solid.jlab.org/wiki/index.php/Full_simulation_and_file_sharing#luminosity_and_radiation_thickness
