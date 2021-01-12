@@ -303,7 +303,7 @@ char input_gen_file[50];
 	T->Branch("Q2", &Q2, "data/D");
 // 	T->Branch("rate_pre", &rate_pre, "data/D");       //before normalized
 	T->Branch("rate", &rate, "data/D");
-	T->Branch("raterad", &rate, "data/D");	
+	T->Branch("raterad", &raterad, "data/D");	
 	T->Branch("charge",&charge,"data/I");
 	T->Branch("particle_id",&particle_id,"data/I");
 	T->Branch("px",&px, "data/D");
