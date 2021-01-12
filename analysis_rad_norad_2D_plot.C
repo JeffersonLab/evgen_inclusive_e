@@ -103,7 +103,8 @@ const double filen_LD2_rad=292;
         TH1F *p_efnorad_cetq66[15];
         TH1F *p_efinter[15];
         TH1F *p_efall[15];;
-        TH1F *p_efall_rad[15];;
+        TH1F *p_efall_rad1[15];;
+        TH1F *p_efnorad_rad1[15];;
         TH1F *p_efinter_Lb[15];
         TH2F *Q2_vs_x_norad;
         TH2F *Q2_vs_x_norad_eDIS;
@@ -126,13 +127,15 @@ const double filen_LD2_rad=292;
   char name_inter1[50];  
   char name_all1[50];  
   char name_all_rad[50];  
+  char name_norad_rad[50];  
   char name_inter_Lb1[50];  
 for(int j=0;j<15;j++){
 //cout<<"xmin="<<bin[j][0]<<"xmax="<<bin[j][1]<<"Q2min="<<bin[j][2]<<"Q2max="<<bin[j][3]<<endl;
    sprintf(name_norad,"ef_norad_bin%d",j);
    sprintf(name_inter,"ef_inter_bin%d",j);
    sprintf(name_all,"ef_all_bin%d",j);
-   sprintf(name_all_rad,"ef_all_rad_bin%d",j);
+   sprintf(name_all_rad,"ef_all_rad1_bin%d",j);
+   sprintf(name_norad_rad,"ef_norad_rad1_bin%d",j);
    sprintf(name_inter_Lb,"ef_inter_Lb_bin%d",j);
    sprintf(name_norad1,"ef_norad_eDIS_bin%d",j);
    sprintf(name_norad2,"ef_norad_cetq66_bin%d",j);
@@ -141,7 +144,8 @@ for(int j=0;j<15;j++){
    p_efnorad_cetq66[j]=new TH1F(name_norad2,name_norad2,50,0,10);
    p_efinter[j]=new TH1F(name_inter,name_inter,50,0,10);
    p_efall[j]=new TH1F(name_all,name_all,50,0,10);
-   p_efall_rad[j]=new TH1F(name_all_rad,name_all_rad,50,0,10);
+   p_efall_rad1[j]=new TH1F(name_all_rad,name_all_rad,50,0,10);
+   p_efnorad_rad1[j]=new TH1F(name_norad_rad,name_norad_rad,50,0,10);
    p_efinter_Lb[j]=new TH1F(name_inter_Lb,name_inter_Lb,50,0,10);
 }
    Q2_vs_x_norad=new TH2F("Q2_vs_x_norad","Q2_vs_x_norad",10,0,1,6,0.5,12.5);
@@ -164,7 +168,8 @@ for(int j=0;j<15;j++){
    Q2_vs_x_inter=new TH2F("Q2_vs_x_inter","Q2_vs_x_internal_rad",10,0,1,6,0.5,12.5);
    Q2_vs_x_inter_Lb=new TH2F("Q2_vs_x_internal_Lb","Q2_vs_x_internal_before_vertex",10,0,1,6,0.5,12.5);
    Q2_vs_x_all=new TH2F("Q2_vs_x_all","Q2_vs_x_radall",10,0,1,6,0.5,12.5);
-   TH2F *Q2_vs_x_all_rad=new TH2F("Q2_vs_x_all_rad","Q2_vs_x_all_rad",10,0,1,6,0.5,12.5);
+   TH2F *Q2_vs_x_all_rad1=new TH2F("Q2_vs_x_all_rad1","Q2_vs_x_all_rad1",10,0,1,6,0.5,12.5);
+   TH2F *Q2_vs_x_norad_rad1=new TH2F("Q2_vs_x_norad_rad1","Q2_vs_x_norad_rad1",10,0,1,6,0.5,12.5);
    x_norad=new TH1F("x_norad","x_norad",100,0,1);
    x_norad_cetq66=new TH1F("x_norad_cetq66","x_norad_cetq66",100,0,1);
    x_norad_eDIS=new TH1F("x_norad_eDIS","x_norad_eDIS",100,0,1);
@@ -580,6 +585,7 @@ f6->SetLineWidth(2);
    Double_t        W12;
    Double_t        Q212;
    Double_t        rate12;
+   Double_t        raterad12;
    Double_t        Ep12;
    Double_t        vz12;
    Double_t        xs12;
@@ -593,6 +599,7 @@ f6->SetLineWidth(2);
    tree_header12->SetBranchAddress("W", &W12, &b_data);
    tree_header12->SetBranchAddress("Q2", &Q212, &b_data);
    tree_header12->SetBranchAddress("rate", &rate12, &b_data);
+   tree_header12->SetBranchAddress("raterad", &raterad12, &b_data);
    tree_header12->SetBranchAddress("Ep", &Ep12, &b_data);
    tree_header12->SetBranchAddress("xs", &xs12, &b_data);
    tree_header12->SetBranchAddress("vz", &vz12, &b_data);
@@ -762,10 +769,6 @@ f6->SetLineWidth(2);
               if(ratef7>0 ){
               Theta_vs_p_norad_SIDIS->Fill(theta_eDIS7,Ep7, ratef7); 
               Q2_vs_x_norad_SIDIS->Fill(x7, Q27, ratef7); 
-   //           for(int ibin=0;ibin<Nbin;ibin++){
-    //            if(W6>2 && x6>bin[ibin][0] && x6<bin[ibin][1] && Q26>bin[ibin][2] && Q26<bin[ibin][3]){
-     //               p_efnorad_SIDIS[ibin]->Fill(Ep6,ratef6);
-      //          }
               }  
          }//end event loop
 	for(long int i=0;i<N_events10;i++){	  
@@ -793,12 +796,15 @@ f6->SetLineWidth(2);
 	for(long int i=0;i<N_events12;i++){	  
 		tree_header12->GetEntry(i);
 		double ratef12=rate12/filen_LD2_rad;
+		double raterad12=raterad12/filen_LD2_rad;
                 double theta_eDIS12=theta12; 
               if(ratef12>0  ){
-              Q2_vs_x_all_rad->Fill(x12, Q212, ratef12); 
+              Q2_vs_x_all_rad1->Fill(x12, Q212, raterad12); 
+              Q2_vs_x_norad_rad1->Fill(x12, Q212, ratef12); 
               for(int ibin=0;ibin<Nbin;ibin++){
                 if(W12>2 && x12>bin[ibin][0] && x12<bin[ibin][1] && Q212>bin[ibin][2] && Q212<bin[ibin][3]){
-                    p_efall_rad[ibin]->Fill(Ep12,ratef12);
+                    p_efall_rad1[ibin]->Fill(Ep12,raterad12);
+                    p_efnorad_rad1[ibin]->Fill(Ep12,rate12);
                 }
               }      
               }  
@@ -815,7 +821,7 @@ f6->SetLineWidth(2);
         totalN[k]=p_efall[k]->Integral()/1000.0;
         totalN_norad[k]=p_efnorad[k]->Integral()/1000.0;
         ratio_rad_onoff[k]=p_efall[k]->Integral()/p_efnorad[k]->Integral(); 
-        ratio_rad_onoff_rad[k]=p_efall_rad[k]->Integral()/p_efnorad[k]->Integral(); 
+        ratio_rad_onoff_rad[k]=p_efall_rad1[k]->Integral()/p_efnorad_rad1[k]->Integral(); 
         ratio_eDIS_eAll[k]=p_efnorad[k]->Integral()/p_efnorad_eDIS[k]->Integral(); 
         ratio_interrad_off[k]=p_efinter[k]->Integral()/p_efnorad[k]->Integral(); 
         ratio_interrad_Lb_off[k]=p_efinter_Lb[k]->Integral()/p_efnorad[k]->Integral(); 
@@ -824,13 +830,13 @@ f6->SetLineWidth(2);
        Q2_vs_x_all_halftarget->SetName("Q2_vs_x_all_halftarget");
         TCanvas* c111;
         c111 = new TCanvas ("c111", " Q2_vs_x_rad", 800, 800);
-        Q2_vs_x_all_rad->Divide(Q2_vs_x_norad);       
-        Q2_vs_x_all_rad->GetXaxis()->SetTitle("x");       
-        Q2_vs_x_all_rad->GetYaxis()->SetTitle("Q2 [GeV^{2}]");       
-        Q2_vs_x_all_rad->SetTitle("Rate_{rad_vertex}/Rate_{norad}");       
-        Q2_vs_x_all_rad->Draw("COLZ text");
-        Q2_vs_x_all_rad->SetMarkerSize(2);
-        Q2_vs_x_all_rad->SetMarkerColor(1);
+        Q2_vs_x_all_rad1->Divide(Q2_vs_x_norad_rad1);       
+        Q2_vs_x_all_rad1->GetXaxis()->SetTitle("x");       
+        Q2_vs_x_all_rad1->GetYaxis()->SetTitle("Q2 [GeV^{2}]");       
+        Q2_vs_x_all_rad1->SetTitle("Rate_{rad_vertex}/Rate_{norad}");       
+        Q2_vs_x_all_rad1->Draw("COLZ text");
+        Q2_vs_x_all_rad1->SetMarkerSize(2);
+        Q2_vs_x_all_rad1->SetMarkerColor(1);
 for(int k = 0; k < Nbin; k++){
 TMarker marker12;
 marker12.SetMarkerStyle(20);
