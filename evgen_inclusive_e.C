@@ -294,37 +294,37 @@ int  main(Int_t argc, char *argv[])
     double raddXSdEdOmega_mubGeVSr=0; // differential cross section with radiative correction
     double theta=0;
     double phi=0;
-    double Nu=0;
+    double nu=0;
     double factor=0;
     TFile *myfile=new TFile(name_rootfile_output,"RECREATE");
     TTree *T=new TTree("T","T");
-    T->Branch("Abeam", &Abeam, "data/D");
-    T->Branch("AL", &AL, "data/D");
-    T->Branch("x", &x, "data/D");
-    T->Branch("y", &y, "data/D");
-    T->Branch("W", &W, "data/D");
-    T->Branch("Q2", &Q2, "data/D");
-    //T->Branch("rate_pre", &rate_pre, "data/D");       //before normalized
-    T->Branch("rate", &rate, "data/D");
-    T->Branch("raterad", &raterad, "data/D");
-    T->Branch("charge",&charge,"data/I");
-    T->Branch("particle_id",&particle_id,"data/I");
-    T->Branch("px",&px, "data/D");
-    T->Branch("py",&py, "data/D");
-    T->Branch("pz",&pz, "data/D");
-    T->Branch("Ep",&Ep, "data/D");
-    T->Branch("Ei",&Ei, "data/D");
-    T->Branch("mass",&mass, "data/D");
-    T->Branch("vx",&vx, "data/D");
-    T->Branch("vy",&vy, "data/D");
-    T->Branch("vz",&vz, "data/D");
-    T->Branch("xs",&xs, "data/D");
-    T->Branch("radxs",&radxs, "data/D");
-    T->Branch("dXSdEdOmega_mubGeVSr",&dXSdEdOmega_mubGeVSr,"data/D");
-    T->Branch("raddXSdEdOmega_mubGeVSr",&raddXSdEdOmega_mubGeVSr,"data/D");
-    T->Branch("theta",&theta, "data/D");
-    T->Branch("phi",&phi, "data/D");
-    T->Branch("nu" ,&Nu, "data/D");
+    T->Branch("Abeam", &Abeam, "Abeam/D");
+    T->Branch("AL", &AL, "AL/D");
+    T->Branch("x", &x, "x/D");
+    T->Branch("y", &y, "y/D");
+    T->Branch("W", &W, "W/D");
+    T->Branch("Q2", &Q2, "Q2/D");
+    //T->Branch("rate_pre", &rate_pre, "rate_pre/D");       //before normalized
+    T->Branch("rate", &rate, "rate/D");
+    T->Branch("raterad", &raterad, "raterad/D");
+    T->Branch("charge",&charge,"charge/I");
+    T->Branch("particle_id",&particle_id,"particle_id/I");
+    T->Branch("px",&px, "px/D");
+    T->Branch("py",&py, "py/D");
+    T->Branch("pz",&pz, "pz/D");
+    T->Branch("Ep",&Ep, "Ep/D");
+    T->Branch("Ei",&Ei, "Ei/D");
+    T->Branch("mass",&mass, "mass/D");
+    T->Branch("vx",&vx, "vx/D");
+    T->Branch("vy",&vy, "vy/D");
+    T->Branch("vz",&vz, "vz/D");
+    T->Branch("xs",&xs, "xs/D");
+    T->Branch("radxs",&radxs, "radxs/D");
+    T->Branch("dXSdEdOmega_mubGeVSr",&dXSdEdOmega_mubGeVSr,"dXSdEdOmega_mubGeVSr/D");
+    T->Branch("raddXSdEdOmega_mubGeVSr",&raddXSdEdOmega_mubGeVSr,"raddXSdEdOmega_mubGeVSr/D");
+    T->Branch("theta",&theta, "theta/D");
+    T->Branch("phi",&phi, "phi/D");
+    T->Branch("nu" ,&nu, "nu/D");
 
     //###################################################################################
     //
@@ -378,11 +378,11 @@ int  main(Int_t argc, char *argv[])
 	}
 
         //calculate kinematics
-        Nu=Ei-Ep;
+        nu=Ei-Ep;
         Q2=4.0*Ei*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
-        W=sqrt(proton_mass*proton_mass + 2*proton_mass*Nu - Q2);
-        x=Q2/2/proton_mass/Nu;
-        y=Nu/Ei;
+        W=sqrt(proton_mass*proton_mass + 2*proton_mass*nu - Q2);
+        x=Q2/2/proton_mass/nu;
+        y=nu/Ei;
 
 
         if(x>=0 && x<=1){
