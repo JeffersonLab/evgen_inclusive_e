@@ -39,7 +39,7 @@ double RadiativeCorrections::Radiate(){
    fT     = fTa + fTb;
 
    if( (fTa==0)||(fTb==0) ){
-      std::cout << "[RadiativeCorrections::Radiate]: WARNING! Radiation lengths are zero! " << std::endl;
+      //std::cout << "[RadiativeCorrections::Radiate]: WARNING! Radiation lengths are zero! " << std::endl;
    }
 
    CalculateEta();
