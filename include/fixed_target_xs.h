@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep, PDF* unpol_pdf);
+double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep, PDF* unpol_pdf, int Fit_model);
 
 
 #endif

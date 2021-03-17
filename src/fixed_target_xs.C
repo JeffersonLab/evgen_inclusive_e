@@ -11,12 +11,12 @@
 #include "neutron_DIS.h"
 #include "christy_bosted_inelastic_QE.h"
 #include "fixed_target_xs.h"
-
+#include "F1F221Wrapper.hh"
 
 using namespace LHAPDF;
 using namespace std;
 
-double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep, PDF* unpol_pdf){
+double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep, PDF* unpol_pdf,int Fit_model){
 	// E : electron beam energy, in unit of GeV
 	// Z : target z
 	// A : target A, N=A-Z
@@ -31,6 +31,7 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 	// double y=Nu/E;
 	double W2=proton_mass * proton_mass + 2 * proton_mass * Nu - Q2;
 	double F1=0,F2=0,xs=0,r=0;
+       if(Fit_model<10){
 	if(W2<3.0*3.0 && Q2<12){  //use PB model
 		F1F2IN09(Z, A, Q2, W2, F1, F2, r);
 	}else if(W2>=3.0*3.0){ //use pdf sets
@@ -43,7 +44,10 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 		F1=Z*F1p + (A-Z)*F1n;  //summing over proton and neutron
 		F2=Z*F2p + (A-Z)*F2n;
 	}
-
+       }else{
+        F1F221Wrapper *model = new F1F221Wrapper();
+        model->GetF1F2IN21(Z, A, Q2, W2, F1, F2);
+        }
 	//already get F1 and F2 for the nucleus
 	xs=(2./137.*Ep/Q2*cos(theta*deg_to_rad/2))*(2./137.*Ep/Q2*cos(theta*deg_to_rad/2));     // mott
 	xs=xs*(2/proton_mass*F1*tan(abs(theta*deg_to_rad)/2)*tan(abs(theta*deg_to_rad)/2) + F2/Nu);
