@@ -9,6 +9,24 @@ refer to http://hallaweb.jlab.org/12GeV/SoLID/download/sim/talk/Inclusive_electr
 Please send questions Zhiwen Zhao (zwzhao@jlab.org), Ye Tian (tainye@jlab.org)
 
 ==== log =================================
+2021/03/16 modified by Jixie Zhang
+1) Add energy loss calculation routines: PVDIS::CalELoss_electron(beam, vz)
+2) After Ep generated flatly in range (0,beam), 
+call PVDIS::CalELoss_electron(beam, vz)  to get Ei, which is the energy of the
+incoming beam electron.
+If (Ei < Ep), call  PVDIS::CalELoss_electron () to get another Ei, repeat this
+till Ei > Ep,
+3) change all beam energy to Ei when calculate Q2, nu,y and XS
+4) change Ta and Tb to zero before calling David's subroutine to radiated born XS.
+Ta set to zero since energy loss have been taken care of by my Eloss routines,
+Tb is set to zero since Geant4 will take care of it. David's code will do the internal
+radiation correction to the born XS.
+5) Add Ei into output root tree, and store it in UserVar008 in the lund file
+6) Add usage to main(), print out usage if no argument is given 
+7) Print out how many events have been saved when each 100 events thrown
+8) Modify CMakelist, also add my own makefile to compile the program.  Both ways
+can compile the program
+
 2021/01/01 commit "6f26734"
 adding unpolarized radiative correction and input file by David Flay and Ye Tian, output adjustment by Zhiwen Zhao
 

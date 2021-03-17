@@ -48,11 +48,11 @@ link_directories(${LHAPDF}/lib)
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
 #----------------------------------------------------------------------------
 # Add the executable
-add_executable(evgen_inclusive_e evgen_inclusive_e.C ${sources} ${headers})
+add_executable(evgen_inclusive_e ${sources} evgen_inclusive_e.C ${headers})
 target_link_libraries(evgen_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
 
