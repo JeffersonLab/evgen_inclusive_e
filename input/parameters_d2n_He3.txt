@@ -34,4 +34,4 @@ RLb                   2.93E-03
 # Radiative length after vertex (using half of target length)
 RLa                   3.62E-02   
 # Fit model 9: Christy-bosted 2009 Fit; 21: Christy 2021 Fit 
-Fit_model             9
+Fit_model             10
