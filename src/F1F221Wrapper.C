@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "F1F221Wrapper.hh"
+#include "F1F221Wrapper.h"
 
 using namespace std;
 

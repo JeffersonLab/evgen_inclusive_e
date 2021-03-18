@@ -16,9 +16,10 @@
 #include "constants.h"
 #include "boost/lexical_cast.hpp"
 #include "LHAPDF/LHAPDF.h"
-#include "TMath.h"
 #include "math.h"
-#include "TString.h"
+
+// #include "TMath.h"
+// #include "TString.h"
 
 #include "proton_DIS.h"
 #include "neutron_DIS.h"
@@ -26,6 +27,7 @@
 #include "fixed_target_xs.h"
 #include "eInclusiveCrossSection.h"
 #include "LHAPDF/LHAPDF.h"
+
 using namespace LHAPDF;
 using namespace std;
 

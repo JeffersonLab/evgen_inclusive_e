@@ -6,9 +6,11 @@
 #include "constants.h"
 #include "boost/lexical_cast.hpp"
 #include "LHAPDF/LHAPDF.h"
-#include "TMath.h"
 #include "math.h"
-#include "TString.h"
+
+// #include "TMath.h"
+// #include "TString.h"
+
 using namespace LHAPDF;
 using namespace std;
 
