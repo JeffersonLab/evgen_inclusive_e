@@ -1349,10 +1349,9 @@ c     &      write(6,2001) w2,q2,f1os,f2os,gamma2
       integer i,j,k,bin,bin2,jlow,jhi,wfn
       logical thend,firsty
       COMMON/FYCOM/ yv,yv2,yv12,fyv11,fyv2,fyv12,gammav
-
+      character*4 prefix
+      prefix="dat/"
       thend = .false.
-
-
 c      if(firsty) write(6,*) firsty
       
       y = ypass
@@ -1368,9 +1367,9 @@ CCC///   Read in smearing function array  ///CCC
           open(unit=35,file='f2.WBARELav18',status='old')
           open(unit=36,file='f12.WBARELav18',status='old')
         elseif(wfn.EQ.2) then
-          open(unit=34,file='f11-onshell-cdbonn.dat',status='old')        
-          open(unit=35,file='f22-onshell-cdbonn.dat',status='old')
-          open(unit=36,file='f12-onshell-cdbonn.dat',status='old')
+          open(unit=34,file=prefix//'f11-onbonn.dat',status='old')        
+          open(unit=35,file=prefix//'f22-onbonn.dat',status='old')
+          open(unit=36,file=prefix//'f12-onbonn.dat',status='old')
         elseif(wfn.EQ.3) then
           open(unit=34,file='f11.WBARELwjc1',status='old')        
           open(unit=35,file='f2.WBARELwjc1',status='old')
@@ -1461,7 +1460,8 @@ c      endif
       logical thend,firsty
       COMMON/FYCOMOFF/ yvoff,yv2off,yv12off,fyv11off,fyv2off,fyv12off,
      &                 gammavoff
-
+      character*4 prefix
+      prefix="dat/"
       thend = .false.
 
       y = ypass
@@ -1477,9 +1477,9 @@ CCC///   Read in smearing function array  ///CCC
           open(unit=38,file='f2.WBARELav18OFF',status='old')
           open(unit=39,file='f12.WBARELav18OFF',status='old')
         elseif(wfn.EQ.2) then  !!!!  Not available yet - fix later
-          open(unit=37,file='f11-offshell-cdbonn.dat',status='old')        
-          open(unit=38,file='f22-offshell-cdbonn.dat',status='old')
-          open(unit=39,file='f12-offshell-cdbonn.dat',status='old')
+          open(unit=37,file= prefix//'f11-offbonn.dat',status='old')        
+          open(unit=38,file= prefix//'f22-offbonn.dat',status='old')
+          open(unit=39,file= prefix//'f12-offbonn.dat',status='old')
         elseif(wfn.EQ.3) then
           open(unit=37,file='f11.WBARELwjc1OFF',status='old')        
           open(unit=38,file='f2.WBARELwjc1OFF',status='old')

@@ -8,8 +8,8 @@ pol_pdfset_ID         0000
 unpol_pdfset_name     CT14nlo    
 unpol_pdfset_ID       0000       
 # target settings 
-tgt_Z                 2     
-tgt_A                 3 
+tgt_Z                 1     
+tgt_A                 2 
 # luminosity  
 lumi                  1E+36 
 # kinematics  

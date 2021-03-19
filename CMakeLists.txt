@@ -96,6 +96,32 @@ foreach(_infile ${INPUT_FILES})
     COPYONLY
     )
 endforeach()
+# copy input dat directory to the install location 
+set(DATA_FILES
+
+dat/f11-onbonn.dat
+dat/f11-offbonn.dat
+dat/f12-offbonn.dat
+dat/f12-onbonn.dat
+dat/f22-offbonn.dat
+dat/f22-onbonn.dat
+
+)
+
+
+foreach(_infile ${DATA_FILES})
+
+  configure_file(
+
+    ${PROJECT_SOURCE_DIR}/${_infile}
+
+    ${PROJECT_BINARY_DIR}/${_infile}
+
+    COPYONLY
+
+    )
+
+endforeach()
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -113,4 +139,4 @@ target_link_libraries(${EXE} ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
 install(TARGETS ${EXE} DESTINATION ${INSTALL_DIR})
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/input DESTINATION ${CMAKE_INSTALL_PREFIX})
-
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/dat DESTINATION ${CMAKE_INSTALL_PREFIX})
