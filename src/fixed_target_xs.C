@@ -45,14 +45,8 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 		F2=Z*F2p + (A-Z)*F2n;
 	}
        }else{
-        F1F221Wrapper *model = new F1F221Wrapper();
-        Q2=2.709;
-        W2=12.815;
-        theta=17.315;
-        Ep=2.815;
-        Nu=7.083;        
+        F1F221Wrapper *model = new F1F221Wrapper();     
         model->GetF1F2IN21(Z, A, Q2, W2, F1, F2);
-        cout<<"Q2="<<Q2<<"W2="<<W2<<"theta="<<theta<<"Ep="<<Ep<<"Nu="<<Nu<<"F1="<<F1<<"F2="<<F2<<endl;
         }
 	//already get F1 and F2 for the nucleus
 	xs=(2./137.*Ep/Q2*cos(theta*deg_to_rad/2))*(2./137.*Ep/Q2*cos(theta*deg_to_rad/2));     // mott
