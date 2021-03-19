@@ -46,7 +46,8 @@ You need to put your ROOT and LHAPDF6 path if compiling on other machine
 >source setup
 >cmake .
 >make
-
+>Makefile_jix---used to read F1F221.f, *.hh, and *.cc files
+>make -f Makefile_jx
 ==== run it and understand output ====
 
 > source setup

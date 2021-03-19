@@ -141,6 +141,7 @@ int  main(Int_t argc, char *argv[])
     std::cout << "RL:            " <<  par.RL                  << std::endl;
     std::cout << "RLb:            " <<  par.RLb                  << std::endl;
     std::cout << "RLa:            " <<  par.RLa                  << std::endl;
+    std::cout << "Fit_model:      " <<  par.Fit_model            << std::endl;
 
     delete myFN;
 
@@ -168,7 +169,8 @@ int  main(Int_t argc, char *argv[])
     const int rad_status=par.rad;    //0 Born cross section only; 1:Radiative cross section with smearing; 2:Radiative cross section without smearing
     const double RL=par.RL;   //radiation length of target
     double RL_before=par.RLb;   //radiation length before target
-    double RL_after=par.RLa;   //radiation length after target
+    double RL_after=par.RLa;   //radiation length after target 
+    const int Fit_model=par.Fit_model;    //9---2009 Christy-Bosted Fit; 21-----2021 Christy's Fit 
     string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
     string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
 // 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name
@@ -253,6 +255,7 @@ int  main(Int_t argc, char *argv[])
     cout<<"Scale factor is loaded......using "<<scale_status<<endl;
     // radiative rate
     cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
+	cout<<"Fit model is loaded......using Christy-Bosted Fit "<<Fit_model<<endl;
     // radiative effects before vertex
     // 	cout<<"Tb is loaded......using "<<RL_before<<endl;
     // 	cout<<"Ta is loaded......using "<<RL_after<<endl;
@@ -387,7 +390,7 @@ int  main(Int_t argc, char *argv[])
 
         if(x>=0 && x<=1){
 
-            xs=calculate_fixed_target_xs( Ei,  Z,  A,  theta,  Ep,  unpol_pdf);   //theta unit in degree
+            xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf, Fit_model);   //theta unit in degree
             if(scale_status==1){
                 factor=0.906-0.00699*Ei;
             }else{

@@ -35,4 +35,6 @@ RL                    0.8e-3
 RLb                   1.7e-3   
 # Radiative length after target
 RLa                   2e-2  
+# Fit model 9: Christy-bosted 2009 Fit; 21: Christy 2021 Fit 
+Fit_model            21 
 #refer to https://solid.jlab.org/wiki/index.php/Full_simulation_and_file_sharing#luminosity_and_radiation_thickness

@@ -22,6 +22,6 @@ class noradXS:public eInclusiveCrossSection {
     private: 
 
     public:
-    double GetBornXS(){return calculate_fixed_target_xs( fEs,  fZ,  fA,  fTh,  fEp,  fpdf)*fscale;}
+    double GetBornXS(){return calculate_fixed_target_xs( fEs,  fZ,  fA,  fTh,  fEp,  fpdf, fmodel)*fscale;}
 };
 #endif

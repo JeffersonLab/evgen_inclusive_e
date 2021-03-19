@@ -7,9 +7,11 @@
 //#include <iostream>
 //#include <fstream>
 //#include <vector>
-#include "TMath.h"
 #include "math.h"
-#include "TString.h"
+
+// #include "TMath.h"
+// #include "TString.h"
+
 using namespace LHAPDF;
 using namespace std;
 

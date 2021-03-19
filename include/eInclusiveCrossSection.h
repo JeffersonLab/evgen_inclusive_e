@@ -16,9 +16,10 @@
 #include "constants.h"
 #include "boost/lexical_cast.hpp"
 #include "LHAPDF/LHAPDF.h"
-#include "TMath.h"
 #include "math.h"
-#include "TString.h"
+
+// #include "TMath.h"
+// #include "TString.h"
 
 #include "proton_DIS.h"
 #include "neutron_DIS.h"
@@ -26,6 +27,7 @@
 #include "fixed_target_xs.h"
 #include "eInclusiveCrossSection.h"
 #include "LHAPDF/LHAPDF.h"
+
 using namespace LHAPDF;
 using namespace std;
 
@@ -36,6 +38,7 @@ class eInclusiveCrossSection{
       double fEs,fEp,fTh;
       PDF *fpdf; 
       double fscale;
+      double fmodel;
       void Init();
 
    public:
@@ -48,6 +51,7 @@ class eInclusiveCrossSection{
       void SetEs(double v) { fEs = v; }
       void SetEp(double v) { fEp = v; }
       void Setpdf(PDF* v)  { fpdf= v; }
+      void Setmodel(double v)  { fmodel= v; }
       void SetScale(double v)  { fscale= v; }
       double GetZ()  const { return fZ;  }
       double GetA()  const { return fA;  }

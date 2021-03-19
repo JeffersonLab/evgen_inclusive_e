@@ -1,25 +1,56 @@
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(InclusiveElectron)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+project(InclusiveElectron CXX Fortran)
+set(EXE "evgen_inclusive_e") 
 
-#------------------------------------------------------------------------
-#ROOT path
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+#----------------------------------------------------------------------------
+# Setup GNUInstallDirs for installation
+include(GNUInstallDirs)
+
+#----------------------------------------------------------------------------
+# The following lines are required so that the executable can dynamically locate 
+# the library dependencies independent of use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_FULL_LIBDIR}" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+#----------------------------------------------------------------------------
+# Force use of c++11 standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#----------------------------------------------------------------------------
+# ROOT path
+# Need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
+# - ROOT built with classic configure/make use the provided $ROOTSYS/etc/cmake/FindROOT.cmake
+# - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 find_package(ROOT REQUIRED)
 
-# this is to ensure we find the header we need
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+# Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
+include(${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------
 # get LHAPDF6 LIB and DIR
-####################### LHAPDF ##############################
-#LHAPDF=/home/yxzhao/workarea/solid_g1_g5/LHAPDF6/installation
-#LHAPDF_LIB=$(LHAPDF)/lib
-#PDFLIBS=-L$(LHAPDF_LIB) -lLHAPDF
-
 set(LHAPDF "$ENV{LHAPDF}")
-#set(LHAPDF "/work/halla/solid/apps/LHAPDF/LHAPDF-6.1.6/") 
+link_directories(${LHAPDF}/lib)
 
 #----------------------------------------------------------------------------
 # add boost libraries
@@ -30,8 +61,12 @@ if(Boost_FOUND)
 endif()
 
 #----------------------------------------------------------------------------
-# debugging symbols, complaints
-set(CMAKE_CXX_FLAGS "-g -Wall")
+# debug flags
+# Fortran 
+# set(CMAKE_Fortran_FLAGS "-g -O2 -Wall -ffixed-line-length-none -x f77-cpp-input ")
+# CXX 
+# set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_BUILD_TYPE=RelWithDebInfo) 
 
 #----------------------------------------------------------------------------
 # Generate dictionaries as well (so we can write objects to ROOT files) 
@@ -43,16 +78,76 @@ ${PROJECT_SOURCE_DIR}/src/
 ${CMAKE_CURRENT_BINARY_DIR}/include 
 )
 
-link_directories(${LHAPDF}/lib)
+#----------------------------------------------------------------------------
+# copy input directory to the install location 
+set(INPUT_FILES
+input/parameters_d2n_He3.txt         
+input/parameters_solid_PVDIS_LD2.txt 
+input/parameters_solid_SIDIS_He3.txt
+input/parameters_solid_JPsi_LH2.txt  
+input/parameters_solid_PVDIS_LH2.txt 
+input/parameters_solid_SIDIS_NH3.txt
+)
+
+foreach(_infile ${INPUT_FILES})
+  configure_file(
+    ${PROJECT_SOURCE_DIR}/${_infile}
+    ${PROJECT_BINARY_DIR}/${_infile}
+    COPYONLY
+    )
+endforeach()
+# copy input dat directory to the install location 
+set(DATA_FILES
+
+dat/f11-onbonn.dat
+dat/f11-offbonn.dat
+dat/f12-offbonn.dat
+dat/f12-onbonn.dat
+dat/f22-offbonn.dat
+dat/f22-onbonn.dat
+
+)
+
+
+foreach(_infile ${DATA_FILES})
+
+  configure_file(
+
+    ${PROJECT_SOURCE_DIR}/${_infile}
+
+    ${PROJECT_BINARY_DIR}/${_infile}
+
+    COPYONLY
+
+    )
+
+endforeach()
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
+#<<<<<<< HEAD
 # NB: headers are included so they will show up in IDEs
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C ${PROJECT_SOURCE_DIR}/src/*.cc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
+#file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C ${PROJECT_SOURCE_DIR}/src/*.cc)
+#file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.h)
 
 #----------------------------------------------------------------------------
 # Add the executable
-add_executable(evgen_inclusive_e ${sources} evgen_inclusive_e.C ${headers})
-target_link_libraries(evgen_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
+#add_executable(evgen_inclusive_e ${sources} evgen_inclusive_e.C ${headers})
+#target_link_libraries(evgen_inclusive_e ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
+#=======
+# NB: HEADERS are included so they will show up in IDEs
+file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.C ${PROJECT_SOURCE_DIR}/src/*.f)
+file(GLOB HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
 
+#----------------------------------------------------------------------------
+# Add the executable
+add_executable(${EXE} evgen_inclusive_e.C ${SOURCES} ${HEADERS})
+target_link_libraries(${EXE} ${ROOT_LIBRARIES} LHAPDF ${Boost_LIBRARIES})
+#>>>>>>> yt_dev_newfit_clean
+
+#----------------------------------------------------------------------------
+# Install items 
+install(TARGETS ${EXE} DESTINATION ${INSTALL_DIR})
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/input DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/dat DESTINATION ${CMAKE_INSTALL_PREFIX})

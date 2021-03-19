@@ -1,19 +1,19 @@
 
-
-#include "constants.h"
-#include "boost/lexical_cast.hpp"
-#include "LHAPDF/LHAPDF.h"
+// #include "constants.h"
+// #include "boost/lexical_cast.hpp"
+// #include "LHAPDF/LHAPDF.h"
 //#include <iostream>
 //#include <fstream>
 //#include <vector>
-#include "TMath.h"
-#include "math.h"
-#include "TString.h"
+// #include "math.h"
+
+// #include "TMath.h"
+// #include "TString.h"
 
 #include "proton_DIS.h"
 
-using namespace LHAPDF;
-using namespace std;
+// using namespace LHAPDF;
+// using namespace std;
 
 /*
 //---functions defined in proton_DIS.h
@@ -220,7 +220,8 @@ double calculate_proton_F1g(PDF* unpol_pdf, double x, double Q2){
 
 	double Q2_thr=c4*x + c5*x*x + c6*x*x*x;
 
-	double R_const=theta/(TMath::Log(Q2/0.04));
+	// double R_const=theta/(TMath::Log(Q2/0.04));
+	double R_const=theta/(log(Q2/0.04));
 
 	double R_a = a1*R_const + a2/pow( pow(Q2, 4) + pow(a3,4), 1.0/4.0)  * ( 1.0+a4*x+a5*x*x )* pow(x, a6);
 	double R_b = b1*R_const + (b2/Q2 + b3/(Q2*Q2 + 0.3*0.3))*(1.0+b4*x+b5*x*x)*pow(x,b6);
