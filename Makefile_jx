@@ -13,7 +13,7 @@ EXECFILE  = eAll.$(MYOS).$(ARCH).exe
 
 SRCDIR   := src
 INCDIR   := include
-MainFile := evgen_inclusive_e.C 
+MainFile := evgen_inclusive_e.cxx 
 
 OTHERINC := -I${LHAPDF}/include
 OTHERLIBS := -L${LHAPDF}/lib -lLHAPDF

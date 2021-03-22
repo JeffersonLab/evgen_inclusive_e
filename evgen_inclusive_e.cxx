@@ -96,8 +96,8 @@ int  main(Int_t argc, char *argv[])
 {
     if(argc<2) {
         cout<<"***Error: You need to provide at least 1 argument\n";
-	cout<<"Usage: "<<argv[0]<<" <input_file> [doIncomingEloss=1] [doRadiateBornXS=1]\n";
-	exit(-1);
+        cout<<"Usage: "<<argv[0]<<" <input_file> [doIncomingEloss=1] [doRadiateBornXS=1]\n";
+        exit(-1);
     }
     char input_gen_file[250];
     strcpy(input_gen_file,argv[1]);
@@ -169,12 +169,12 @@ int  main(Int_t argc, char *argv[])
     const int rad_status=par.rad;    //0 Born cross section only; 1:Radiative cross section with smearing; 2:Radiative cross section without smearing
     const double RL=par.RL;   //radiation length of target
     double RL_before=par.RLb;   //radiation length before target
-    double RL_after=par.RLa;   //radiation length after target 
+    double RL_after=par.RLa;   //radiation length after target
     const int Fit_model=par.Fit_model;    //9---2009 Christy-Bosted Fit; 21-----2021 Christy's Fit 
     string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
     string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
-// 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name
-// 	string unpol_pdfset_name="cteq66";   // unpol. pdfset name
+    //string unpol_pdfset_name="CT14lo";   // unpol. pdfset name
+    //string unpol_pdfset_name="cteq66";   // unpol. pdfset name
 
     /*const double lumi=0.63e39;  //Hz/cm2  this must be luminosity per nucleus (corresponding to the "A" input), not per nucleon!
     const double E=4.74;   //GeV, electron beam energy
@@ -193,8 +193,8 @@ int  main(Int_t argc, char *argv[])
     const int num_evt=int(atof(argv[2]));    //number of event to generate within the phase space
     string pol_pdfset_name="NNPDFpol11_100";    //pol. pdfset name
     string unpol_pdfset_name="CT14nlo";*/   // unpol. pdfset name
-// 	string unpol_pdfset_name="CT14lo";   // unpol. pdfset name
-// 	string unpol_pdfset_name="cteq66";   // unpol. pdfset name
+    //string unpol_pdfset_name="CT14lo";   // unpol. pdfset name
+    //string unpol_pdfset_name="cteq66";   // unpol. pdfset name
     TString name_rootfile_output=par.output_name;   // name of the rootfile to save output data
 
     //output lund file
@@ -255,7 +255,7 @@ int  main(Int_t argc, char *argv[])
     cout<<"Scale factor is loaded......using "<<scale_status<<endl;
     // radiative rate
     cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
-	cout<<"Fit model is loaded......using Christy-Bosted Fit "<<Fit_model<<endl;
+    cout<<"Fit model is loaded......using Christy-Bosted Fit "<<Fit_model<<endl;
     // radiative effects before vertex
     // 	cout<<"Tb is loaded......using "<<RL_before<<endl;
     // 	cout<<"Ta is loaded......using "<<RL_after<<endl;
@@ -285,10 +285,11 @@ int  main(Int_t argc, char *argv[])
 
     //TTree to save
     double Abeam=0, AL=0, x=0, y=0, W=0, Q2=0, rate=0,raterad=0;
+    double Ei=0, xi=0, yi=0, Wi=0, Q2i=0;  //Jixie: after Eloss variables
     //rate_pre=0;
     int charge=-1, particle_id=11;
     double px=0, py=0, pz=0;
-    double Ep=0, Ei=0;
+    double Ep=0;
     double mass=0.511/1000.0;  //GeV
     double vx=0, vy=0, vz=0;
     double xs=0;
@@ -301,8 +302,6 @@ int  main(Int_t argc, char *argv[])
     double factor=0;
     TFile *myfile=new TFile(name_rootfile_output,"RECREATE");
     TTree *T=new TTree("T","T");
-    T->Branch("Abeam", &Abeam, "Abeam/D");
-    T->Branch("AL", &AL, "AL/D");
     T->Branch("x", &x, "x/D");
     T->Branch("y", &y, "y/D");
     T->Branch("W", &W, "W/D");
@@ -310,13 +309,19 @@ int  main(Int_t argc, char *argv[])
     //T->Branch("rate_pre", &rate_pre, "rate_pre/D");       //before normalized
     T->Branch("rate", &rate, "rate/D");
     T->Branch("raterad", &raterad, "raterad/D");
+    T->Branch("Ei",&Ei, "Ei/D");     //energy right before scattering, after Eloss
+    T->Branch("Abeam", &Abeam, "Abeam/D");
+    T->Branch("AL", &AL, "AL/D");
+    T->Branch("xi", &xi, "xi/D");    //Jixie: calculated using Ei instead of beam energy
+    T->Branch("yi", &yi, "yi/D");
+    T->Branch("Wi", &Wi, "Wi/D");
+    T->Branch("Q2i", &Q2i, "Q2i/D");
     T->Branch("charge",&charge,"charge/I");
     T->Branch("particle_id",&particle_id,"particle_id/I");
     T->Branch("px",&px, "px/D");
     T->Branch("py",&py, "py/D");
     T->Branch("pz",&pz, "pz/D");
     T->Branch("Ep",&Ep, "Ep/D");
-    T->Branch("Ei",&Ei, "Ei/D");
     T->Branch("mass",&mass, "mass/D");
     T->Branch("vx",&vx, "vx/D");
     T->Branch("vy",&vy, "vy/D");
@@ -365,34 +370,42 @@ int  main(Int_t argc, char *argv[])
         py=Ep*sin(theta*deg_to_rad)*sin(phi*deg_to_rad);
         pz=Ep*cos(theta*deg_to_rad);
 
-	
-	//caculate incoming energy loss, ture off internal brem.
-	//repeat till the energy before scttering larger than the scattered energy 
-	if(doIncomingEloss) {
-	    Ei = 0.0;
-	    int tryN = 0;
-	    while (Ei < Ep && (++tryN)<1000) 
-	    {
-		Ei = PVDIS::CalELoss_electron(E*GeV, vz, 0)/1000.;  //turn into GeV
-	    }
-	}
-	else {
-	    Ei = E; 
-	}
+        
+        //caculate incoming energy loss, ture off internal brem.
+        //repeat till the energy before scttering larger than the scattered energy 
+        if(doIncomingEloss) {
+            Ei = 0.0;
+            int tryN = 0;
+            while (Ei < Ep && (++tryN)<1000) 
+            {
+                Ei = PVDIS::CalELoss_electron(E*GeV, vz, 0)/1000.;  //turn into GeV
+            }
+        }
+        else {
+            Ei = E; 
+        }
 
-        //calculate kinematics
+        //calculate after Eloss kinematics
         nu=Ei-Ep;
-        Q2=4.0*Ei*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
+        Q2i=4.0*Ei*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
+        Wi=sqrt(proton_mass*proton_mass + 2*proton_mass*nu - Q2i);
+        xi=Q2i/2/proton_mass/nu;
+        yi=nu/Ei;
+
+        //calculate before Eloss kinematics
+        nu=E-Ep;
+        Q2=4.0*E*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
         W=sqrt(proton_mass*proton_mass + 2*proton_mass*nu - Q2);
         x=Q2/2/proton_mass/nu;
-        y=nu/Ei;
-
+        y=nu/E;
+        
 
         if(x>=0 && x<=1){
-
-            xs=calculate_fixed_target_xs( E,  Z,  A,  theta,  Ep,  unpol_pdf, Fit_model);   //theta unit in degree
+            //By Jixie: use the Ei to calculate XS now 
+            //But still use beam to do the scaling since the scale factor is determined using the norminal beam
+            xs=calculate_fixed_target_xs( Ei,  Z,  A,  theta,  Ep,  unpol_pdf, Fit_model);   //theta unit in degree
             if(scale_status==1){
-                factor=0.906-0.00699*Ei;
+                factor=0.906-0.00699*E;
             }else{
                 factor=1.0;
             }
@@ -419,15 +432,15 @@ int  main(Int_t argc, char *argv[])
             //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;
             rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
             //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
-	    
-	    //Jixie: add doRadiateBornXS to control this block from command line argument, sometimes we  
-	    //skip radiating the born xs to speed up
+            
+            //Jixie: add doRadiateBornXS to control this block from command line argument, sometimes we  
+            //skip radiating the born xs to speed up
             if(rad_status>0 && doRadiateBornXS!=0){
                 double RL_before_all=0;
                 if(rad_status==1) RL_before_all=RL_before+(vz-vertex_z_min)/(vertex_z_max-vertex_z_min)*RL;
                 if(rad_status==2) RL_before_all=RL_before+0.5*RL;
-		//Jixie: since Eloss has been considered, RL_before and RL_after need to be set to zero
-		RL_after=RL_before_all=0.0;
+                //Jixie: since Eloss has been considered, RL_before and RL_after need to be set to zero
+                RL_after=RL_before_all=0.0;
 
                 // cout<<(vz-vertex_z_min)/(vertex_z_max-vertex_z_min) << " " <<RL_before_all<<endl;
                 RadiativeCorrections rad;
@@ -454,20 +467,20 @@ int  main(Int_t argc, char *argv[])
 
 
             T->Fill();
-	    count++;
+            count++;
 
             //output to lund file
-            OUTPUT_lund << "1" << " \t " << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << " \t " << raterad  << " \t " << Ei  << " \t "  << Abeam <<" \t " << AL << endl;
+            OUTPUT_lund << "1" << " \t " << x << " \t " << y  << " \t " << W << " \t " << Q2 << " \t " << rate << " \t " << raterad  << " \t " << Ei  << " \t " << Abeam <<" \t " << AL << " \t " << xi << " \t " << yi << " \t " << Wi << " \t " << Q2i << endl;
 
             //output to lund file (old format)
             //OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
 
             OUTPUT_lund << " \t " << "1" << " \t " << charge << " \t " << "1" << " \t " << particle_id << " \t " << "0" << " \t " << "0" << " \t " << px << " \t " << py << " \t " << pz << " \t " << Ep << " \t " << mass<<" \t " << vx  << " \t " << vy << " \t " << vz << endl;
         }  // save something physical for DIS events
-	
-	if(((i+1)%100)==0 || i+1==num_evt) {
-	    cout<<i+1<<"/"<<num_evt<<" events thrown, "<<count<<" events saved. \n";
-	}
+        
+        if(((i+1)%1000)==0 || i+1==num_evt) {
+            cout<<i+1<<"/"<<num_evt<<" events thrown, "<<count<<" events saved. \r";
+        }
     } //end for
 
 // 	int counter_try=0,counter_good=0;

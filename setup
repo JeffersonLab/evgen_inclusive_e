@@ -17,5 +17,6 @@ setenv LHAPDF_DATA_PATH ${LHAPDF}/share/LHAPDF
 #setenv LHAPDF_DATA_PATH /cvmfs/sft.cern.ch/lcg/external/lhapdfsets/current
 
 
-
+#use cmake 3.19.4
+setenv PATH /apps/cmake/3.19.4/bin:${PATH}
 
