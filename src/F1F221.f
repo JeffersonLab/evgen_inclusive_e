@@ -916,8 +916,8 @@ CCCC   to be initialized first.                                     CCCC
       real*8 ymin,ymax,pi,pi2,epsd
       real*8 c0,c1,c2,delta(1000)
       integer i,j,nbins,wfn
-c      logical first/.true./
-      logical firsty/.false./
+      logical firsty/.true./
+c      logical firsty/.false./
       logical off
       real*8 dsimps
       external dsimps
@@ -1359,7 +1359,7 @@ c      if(firsty) write(6,*) firsty
 
 CCC///   Read in smearing function array  ///CCC
 
-      firsty = .true.
+c      firsty = .true.
       i = 0
       if(firsty) then
         if(wfn.EQ.1) then
@@ -1469,7 +1469,7 @@ c      endif
 
 CCC///   Read in smearing function array  ///CCC
 
-      firsty = .true.
+c      firsty = .true.
       i = 0
       if(firsty) then
         if(wfn.EQ.1) then
