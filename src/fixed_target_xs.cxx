@@ -31,10 +31,11 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 	// double y=Nu/E;
 	double W2=proton_mass * proton_mass + 2 * proton_mass * Nu - Q2;
 	double F1=0,F2=0,xs=0,r=0;
-       if(Fit_model<10){
-	if(W2<3.0*3.0 && Q2<12){  //use PB model
+       if(Fit_model==9 || Fit_model==21){
+	if(Fit_model==9){
+	 if(W2<3.0*3.0 && Q2<12){  //use PB model
 		F1F2IN09(Z, A, Q2, W2, F1, F2, r);
-	}else if(W2>=3.0*3.0){ //use pdf sets
+	 }else if(W2>=3.0*3.0){ //use pdf sets
 		double F1p=calculate_proton_F1g(unpol_pdf,  x,  Q2);  //proton 
 		double F2p=calculate_proton_F2g(unpol_pdf,  x,  Q2);
 
@@ -54,5 +55,6 @@ double calculate_fixed_target_xs(double E, int Z, int A, double theta, double Ep
 	xs=xs*389.379;   //  mub/GeV-sr
 
 	return xs;
+       }        
 }
 
