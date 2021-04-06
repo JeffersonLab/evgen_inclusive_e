@@ -470,7 +470,7 @@ int  main(Int_t argc, char *argv[])
             count++;
 
             //output to lund file
-            OUTPUT_lund << "1" << " \t " << x << " \t " << y  << " \t " << W << " \t " << Q2 << " \t " << rate << " \t " << raterad  << " \t " << Ei  << " \t " << Abeam <<" \t " << AL << " \t " << xi << " \t " << yi << " \t " << Wi << " \t " << Q2i << endl;
+            OUTPUT_lund << "1" << " \t " << x << " \t " << y  << " \t " << W << " \t " << Q2 << " \t " << rate << " \t " << raterad  << " \t " << 0  << " \t " << Abeam <<" \t " << AL << " \t " << Ei << " \t " << xi << " \t " << yi << " \t " << Wi << " \t " << Q2i << endl;
 
             //output to lund file (old format)
             //OUTPUT_lund << "1" << " \t " << Abeam  << " \t " << AL  << " \t " << "0"  << " \t " << "0" << " \t "  << x << " \t " << y  << " \t " << W  << " \t " << Q2  << " \t " << rate << endl;
