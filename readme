@@ -27,7 +27,10 @@ radiation correction to the born XS.
 8) Modify CMakelist, also add my own makefile to compile the program.  Both ways
 can compile the program
 
-2021/01/01 commit "6f26734"
+2021/04/06 commit "4bb274c"
+add fit2021 (model 21) in addtional to old fit2009 (model 9) by Ye Tian and add beam energy after external rad in output by Jixie Zhang
+
+2021/01/11 commit "11d7751"
 adding unpolarized radiative correction and input file by David Flay and Ye Tian, output adjustment by Zhiwen Zhao
 
 2020/04/24 commit "4b22e1b"
@@ -46,16 +49,19 @@ You need to put your ROOT and LHAPDF6 path if compiling on other machine
 >source setup
 >cmake .
 >make
->Makefile_jix---used to read F1F221.f, *.hh, and *.cc files
->make -f Makefile_jx
+
+a temporary compiling tool, don't use this
+make -f Makefile_jx
+
 ==== run it and understand output ====
 
 > source setup
 >./evgen_inclusive_e inputfile
 
-see inputfile example under input dir
+see inputfile examples under input dir
 rad: 0 Born cross section only; 1:unpolarized radiative cross section with smearing; 2:unpolarized radiative cross section without smearing
-(radiative code is slow about 0.15s/event)
+scale 1 with addtional correction, 0 without addtional correction
+model 21 with 2021 fit, 9 with 2009 fit
 
 a rootfile and a txt file in lund format will be produced in the current directory
 
