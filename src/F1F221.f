@@ -1363,21 +1363,21 @@ c      firsty = .true.
       i = 0
       if(firsty) then
         if(wfn.EQ.1) then
-          open(unit=34,file='f11.WBARELav18',status='old')
-          open(unit=35,file='f2.WBARELav18',status='old')
-          open(unit=36,file='f12.WBARELav18',status='old')
+          open(unit=34,file=prefix//'f11.WBARELav18',status='old')
+          open(unit=35,file=prefix//'f2.WBARELav18',status='old')
+          open(unit=36,file=prefix//'f12.WBARELav18',status='old')
         elseif(wfn.EQ.2) then
           open(unit=34,file=prefix//'f11-onbonn.dat',status='old')        
           open(unit=35,file=prefix//'f22-onbonn.dat',status='old')
           open(unit=36,file=prefix//'f12-onbonn.dat',status='old')
         elseif(wfn.EQ.3) then
-          open(unit=34,file='f11.WBARELwjc1',status='old')        
-          open(unit=35,file='f2.WBARELwjc1',status='old')
-          open(unit=36,file='f12.WBARELwjc1',status='old') 
+          open(unit=34,file=prefix//'f11.WBARELwjc1',status='old')        
+          open(unit=35,file=prefix//'f2.WBARELwjc1',status='old')
+          open(unit=36,file=prefix//'f12.WBARELwjc1',status='old') 
         elseif(wfn.EQ.4) then
-          open(unit=34,file='f11.WBARELwjc2',status='old')        
-          open(unit=35,file='f2.WBARELwjc2',status='old')
-          open(unit=36,file='f12.WBARELwjc2',status='old')
+          open(unit=34,file=prefix//'f11.WBARELwjc2',status='old')        
+          open(unit=35,file=prefix//'f2.WBARELwjc2',status='old')
+          open(unit=36,file=prefix//'f12.WBARELwjc2',status='old')
         else
           write(6,*)  "Warning:  wavefunction undefined"
         endif
@@ -1473,21 +1473,21 @@ c      firsty = .true.
       i = 0
       if(firsty) then
         if(wfn.EQ.1) then
-          open(unit=37,file='f11.WBARELav18OFF',status='old')        
-          open(unit=38,file='f2.WBARELav18OFF',status='old')
-          open(unit=39,file='f12.WBARELav18OFF',status='old')
+          open(unit=37,file= prefix//'f11.WBARELav18OFF',status='old')        
+          open(unit=38,file= prefix//'f2.WBARELav18OFF',status='old')
+          open(unit=39,file= prefix//'f12.WBARELav18OFF',status='old')
         elseif(wfn.EQ.2) then  !!!!  Not available yet - fix later
           open(unit=37,file= prefix//'f11-offbonn.dat',status='old')        
           open(unit=38,file= prefix//'f22-offbonn.dat',status='old')
           open(unit=39,file= prefix//'f12-offbonn.dat',status='old')
         elseif(wfn.EQ.3) then
-          open(unit=37,file='f11.WBARELwjc1OFF',status='old')        
-          open(unit=38,file='f2.WBARELwjc1OFF',status='old')
-          open(unit=39,file='f12.WBARELwjc1OFF',status='old') 
+          open(unit=37,file= prefix//'f11.WBARELwjc1OFF',status='old')        
+          open(unit=38,file= prefix//'f2.WBARELwjc1OFF',status='old')
+          open(unit=39,file= prefix//'f12.WBARELwjc1OFF',status='old') 
         elseif(wfn.EQ.4) then
-          open(unit=37,file='f11.WBARELwjc2OFF',status='old')        
-          open(unit=38,file='f2.WBARELwjc2OFF',status='old')
-          open(unit=39,file='f12.WBARELwjc2OFF',status='old')
+          open(unit=37,file= prefix//'f11.WBARELwjc2OFF',status='old')        
+          open(unit=38,file= prefix//'f2.WBARELwjc2OFF',status='old')
+          open(unit=39,file= prefix//'f12.WBARELwjc2OFF',status='old')
         else
           write(6,*)  "Warning:  wavefunction undefined"
         endif
@@ -2237,6 +2237,8 @@ C **********************************************************************
         LOGICAL init /.FALSE./
         REAL*8  pi,hc
 	SAVE
+        character*4 prefix
+        prefix="dat/"
 
         pi = 4*DATAN(1.D0)
         hc = 197.327D0		! MeV.fm conversion factor
@@ -2244,7 +2246,7 @@ C **********************************************************************
         IF (init) GO TO 999     ! Data already read
 C...Read data from file
 	OPEN (10, FORM='FORMATTED',
-     &	       FILE='cdbn.qwave',
+     &	       FILE= prefix//'cdbn.qwave',
      &	       STATUS='OLD')
 c        READ (10,100)
         READ (10,*)
@@ -2302,6 +2304,8 @@ C ***********************************************************************
         LOGICAL readin /.FALSE./
 	REAL*8	pi
 	SAVE
+        character*4 prefix
+        prefix="dat/"
 
 C...Value of pi
         pi = 4*DATAN(1.D0)
@@ -2311,7 +2315,7 @@ C...Value of pi
         IF (readin) GO TO 123
 C...Read data from file
 c        OPEN (10,FILE='/u/home/wmelnitc/Work/EMC/D/Wfn/av18.dat',
-        OPEN (10,FILE='av18.dat',
+        OPEN (10,FILE= prefix//'av18.dat',
      &		FORM='FORMATTED')
 	DO ip=1,9
           READ (10,*)
@@ -2362,6 +2366,8 @@ C **********************************************************************
         LOGICAL init /.FALSE./
         REAL*8  pi,hcM,hcG
 	SAVE
+        character*4 prefix
+        prefix="dat/"
 
         pi = 4*DATAN(1.D0)
         hcM = 197.327D0		! GeV.fm conversion factor
@@ -2371,7 +2377,7 @@ C **********************************************************************
 C...Read data from file
 	OPEN (10, FORM='FORMATTED',
 c     &	      FILE='/u/home/wmelnitc/Work/EMC/D/Wfn/wjc-1.dat',
-     &	      FILE='wjc-1.dat',
+     &	      FILE= prefix//'wjc-1.dat',
      &	      STATUS='OLD')
 
 C...Momentum space [qgrid in MeV, ugrid in GeV^-3/2]
@@ -2427,6 +2433,8 @@ C **********************************************************************
         LOGICAL init /.FALSE./
         REAL*8  pi,hcM,hcG
 	SAVE
+        character*4 prefix
+        prefix="dat/"
 
         pi = 4*DATAN(1.D0)
         hcM = 197.327D0		! GeV.fm conversion factor
@@ -2435,7 +2443,7 @@ C **********************************************************************
         IF (init) GO TO 999     ! Data already read
 C...Read data from file
 	OPEN (10, FORM='FORMATTED',
-     &	      FILE='wjc-2.dat',
+     &	      FILE= prefix//'wjc-2.dat',
      &	      STATUS='OLD')
 
 C...Momentum space [qgrid in MeV, ugrid in GeV^-3/2]
