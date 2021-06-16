@@ -422,6 +422,7 @@ int  main(Int_t argc, char *argv[])
             NoRdXSDEdOmega.SetTh(theta);
             NoRdXSDEdOmega.Setpdf(unpol_pdf);
             NoRdXSDEdOmega.SetScale(factor);
+            NoRdXSDEdOmega.Setmodel(Fit_model);
             // cout<<"dXSdEdOmega="<<dXSdEdOmega_mubGeVSr<<endl;
             noXS=&NoRdXSDEdOmega;
             double noradCross=noXS->GetBornXS();
