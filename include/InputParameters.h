@@ -32,7 +32,7 @@ typedef struct inputParameters {
    double RL;                       //radiation length of target
    double RLb;                     //Total radiation length X before target
    double RLa;                     //Total radiation length X after target
-   double Fit_model;                     //9---Christy-Bosted 2009 Fit; 21----Christy's 2021 Fit
+   int Fit_model;                     //9---Christy-Bosted 2009 Fit; 21----Christy's 2021 Fit
 
    // constructor 
    inputParameters(): 
