@@ -105,7 +105,7 @@ int  main(Int_t argc, char *argv[])
     std::cout<<"input file "<< str <<std::endl;
     std::cout<<std::endl;
 
-    int doIncomingEloss = 1;
+    int doIncomingEloss = 0;
     if(argc>2) doIncomingEloss = atoi(argv[2]);
     int doRadiateBornXS = 1;
     if(argc>3) doRadiateBornXS = atoi(argv[3]);
@@ -285,7 +285,7 @@ int  main(Int_t argc, char *argv[])
 
     //TTree to save
     double Abeam=0, AL=0, x=0, y=0, W=0, Q2=0, rate=0,raterad=0;
-    double Ei=0, xi=0, yi=0, Wi=0, Q2i=0;  //Jixie: after Eloss variables
+    double Ei=0, xi=0, yi=0, Wi=0, Q2i=0, nui=0;  //Jixie: after Eloss variables
     //rate_pre=0;
     int charge=-1, particle_id=11;
     double px=0, py=0, pz=0;
@@ -306,6 +306,7 @@ int  main(Int_t argc, char *argv[])
     T->Branch("y", &y, "y/D");
     T->Branch("W", &W, "W/D");
     T->Branch("Q2", &Q2, "Q2/D");
+    T->Branch("nu" ,&nu, "nu/D");    
     //T->Branch("rate_pre", &rate_pre, "rate_pre/D");       //before normalized
     T->Branch("rate", &rate, "rate/D");
     T->Branch("raterad", &raterad, "raterad/D");
@@ -316,6 +317,7 @@ int  main(Int_t argc, char *argv[])
     T->Branch("yi", &yi, "yi/D");
     T->Branch("Wi", &Wi, "Wi/D");
     T->Branch("Q2i", &Q2i, "Q2i/D");
+    T->Branch("nui" ,&nui, "nui/D");
     T->Branch("charge",&charge,"charge/I");
     T->Branch("particle_id",&particle_id,"particle_id/I");
     T->Branch("px",&px, "px/D");
@@ -332,7 +334,7 @@ int  main(Int_t argc, char *argv[])
     T->Branch("raddXSdEdOmega_mubGeVSr",&raddXSdEdOmega_mubGeVSr,"raddXSdEdOmega_mubGeVSr/D");
     T->Branch("theta",&theta, "theta/D");
     T->Branch("phi",&phi, "phi/D");
-    T->Branch("nu" ,&nu, "nu/D");
+
 
     //###################################################################################
     //
@@ -380,17 +382,16 @@ int  main(Int_t argc, char *argv[])
             {
                 Ei = PVDIS::CalELoss_electron(E*GeV, vz, 0)/1000.;  //turn into GeV
             }
+            //calculate after Eloss kinematics
+            nui=Ei-Ep;
+            Q2i=4.0*Ei*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
+            Wi=sqrt(proton_mass*proton_mass + 2*proton_mass*nui - Q2i);
+            xi=Q2i/2/proton_mass/nui;
+            yi=nui/Ei;            
         }
         else {
             Ei = E; 
         }
-
-        //calculate after Eloss kinematics
-        nu=Ei-Ep;
-        Q2i=4.0*Ei*Ep*sin(theta*deg_to_rad/2.0)*sin(theta*deg_to_rad/2.0);
-        Wi=sqrt(proton_mass*proton_mass + 2*proton_mass*nu - Q2i);
-        xi=Q2i/2/proton_mass/nu;
-        yi=nu/Ei;
 
         //calculate before Eloss kinematics
         nu=E-Ep;
