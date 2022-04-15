@@ -138,9 +138,10 @@ int  main(Int_t argc, char *argv[])
     std::cout << "vz_max:         " <<  par.vz_max               << std::endl;
     std::cout << "scale:          " <<  par.scale                << std::endl;
     std::cout << "rad:            " <<  par.rad                  << std::endl;
-    std::cout << "RL:            " <<  par.RL                  << std::endl;
+    std::cout << "RL:             " <<  par.RL                  << std::endl;
     std::cout << "RLb:            " <<  par.RLb                  << std::endl;
     std::cout << "RLa:            " <<  par.RLa                  << std::endl;
+    std::cout << "ThreshType:     " <<  par.ThreshType           << std::endl;    
     std::cout << "Fit_model:      " <<  par.Fit_model            << std::endl;
 
     delete myFN;
@@ -170,6 +171,7 @@ int  main(Int_t argc, char *argv[])
     const double RL=par.RL;   //radiation length of target
     double RL_before=par.RLb;   //radiation length before target
     double RL_after=par.RLa;   //radiation length after target
+    const int ThreshType=par.ThreshType;   //radiation threshold type
     const int Fit_model=par.Fit_model;    //9---2009 Christy-Bosted Fit; 21-----2021 Christy's Fit 
     string pol_pdfset_name=par.pol_pdfset_name;    //pol. pdfset name
     string unpol_pdfset_name=par.unpol_pdfset_name;   // unpol. pdfset name
@@ -434,7 +436,11 @@ int  main(Int_t argc, char *argv[])
             //cout<<"d_omiga="<<d_omiga<<"d_E="<<d_E<<endl;
             rate = xs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
             //cout<<"norad rate="<<rate<<"xs="<<xs<<endl;
-            
+            // set up the radiation integration threshold 
+             RC::thrType_t Integr_threshold;
+            if(ThreshType==0){
+             Integr_threshold = RC::kElastic;
+            }else Integr_threshold = RC::kPion;            
             //Jixie: add doRadiateBornXS to control this block from command line argument, sometimes we  
             //skip radiating the born xs to speed up
             if(rad_status>0 && doRadiateBornXS!=0){
@@ -448,6 +454,7 @@ int  main(Int_t argc, char *argv[])
                 RadiativeCorrections rad;
                 rad.SetTa(RL_after);
                 rad.SetTb(RL_before_all);
+                rad.SetIntegrationThreshold(Integr_threshold);
                 rad.SetCrossSection(noXS);
                 double radCross=rad.Radiate();
                 // cout<<"radCross="<<radCross<<endl;
