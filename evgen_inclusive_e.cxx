@@ -374,7 +374,6 @@ int  main(Int_t argc, char *argv[])
         py=Ep*sin(theta*deg_to_rad)*sin(phi*deg_to_rad);
         pz=Ep*cos(theta*deg_to_rad);
 
-        
         //caculate incoming energy loss, ture off internal brem.
         //repeat till the energy before scttering larger than the scattered energy 
         if(doIncomingEloss) {
@@ -458,7 +457,7 @@ int  main(Int_t argc, char *argv[])
                 RadiativeCorrections rad;
                 rad.SetTa(RL_after);
                 rad.SetTb(RL_before_all);
-                cout<<"threshold="<<Integr_threshold<<endl;  
+                //cout<<"threshold="<<Integr_threshold<<endl;  
                 rad.SetIntegrationThreshold(Integr_threshold);
                 rad.SetCrossSection(noXS);
                 double radCross=rad.Radiate();
@@ -466,7 +465,7 @@ int  main(Int_t argc, char *argv[])
                 raddXSdEdOmega_mubGeVSr=radCross;
                 radxs=radCross*(d_E*d_omiga/num_evt);  //in unit of mub now
                 raterad = radxs * 1.0e-6 * 1e-24 * lumi;   //in unit of Hz
-                cout<<"rad rate="<<raterad<<"radxs="<<radxs<<"    "<<"noradxs="<<dXSdEdOmega_mubGeVSr<<"   "<<"Xjb="<<x<<"Ei="<<Ei<<endl;
+                //cout<<"rad rate="<<raterad<<"radxs="<<radxs<<"    "<<"noradxs="<<dXSdEdOmega_mubGeVSr<<"   "<<"Xjb="<<x<<"Ei="<<Ei<<endl;
             }
             //calculate PVDIS asymmetries Abeam and AL
             //proton
