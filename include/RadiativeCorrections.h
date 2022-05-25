@@ -15,7 +15,7 @@
 // #include "F1F209.h"
 
 namespace RC {
-   enum thrType_t { kElastic, kPion }; 
+   enum thrType_t { kElastic, kPion, kQuasi }; 
 } 
 
 class RadiativeCorrections {
