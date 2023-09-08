@@ -36,6 +36,7 @@ const double proton_mass=0.9383;      // GeV
 const double pion_mass=0.140;         // GeV
 
 const double deg_to_rad = 1.0/180.0*PI;
+const double rad_to_deg = 180.0/PI;
 
 
 #endif

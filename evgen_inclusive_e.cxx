@@ -258,6 +258,7 @@ int  main(Int_t argc, char *argv[])
     // radiative rate
     cout<<"Radiative rate is loaded......using "<<rad_status<<endl;
     cout<<"Fit model is loaded......using Christy-Bosted Fit "<<Fit_model<<endl;
+    cout<<"Thrown event on costheta......using "<<endl;
     // radiative effects before vertex
     // 	cout<<"Tb is loaded......using "<<RL_before<<endl;
     // 	cout<<"Ta is loaded......using "<<RL_after<<endl;
@@ -299,6 +300,7 @@ int  main(Int_t argc, char *argv[])
     double radxs=0;
     double raddXSdEdOmega_mubGeVSr=0; // differential cross section with radiative correction
     double theta=0;
+    double costheta=0;
     double phi=0;
     double nu=0;
     double factor=0;
@@ -364,7 +366,9 @@ int  main(Int_t argc, char *argv[])
         Ep=rand.Uniform(Ep_min, Ep_max);
         //uniform phi, theta
         phi=rand.Uniform(0,360);  //0 degree to 360 degree
-        theta=rand.Uniform(theta_min, theta_max);
+        //theta=rand.Uniform(theta_min, theta_max);
+	costheta=rand.Uniform(cos(theta_max*deg_to_rad),cos(theta_min*deg_to_rad));
+        theta = TMath::ACos(costheta)*rad_to_deg; 
 
 
         double d_omiga=2*PI*(cos(theta_min*deg_to_rad) - cos(theta_max*deg_to_rad));
