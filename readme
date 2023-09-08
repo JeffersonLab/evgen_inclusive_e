@@ -1,14 +1,21 @@
 ====Introduction ========================
-
+F1F209 fit
 An inclusive electron generator
 The process includes QE + resonance + DIS for nucleus target with Z protons and A atoms.
 The W<3 GeV region uses Peter Bosted fit
 the W>3 GeV region uses world PDF sets, the LHAPDF6 interface is used
 refer to http://hallaweb.jlab.org/12GeV/SoLID/download/sim/talk/Inclusive_electron_generator.pdf
+F1F221 fit
+The W2<24 GeV2 and all Q2<30 GeV2---Eric Christy's fit (2021) Significantly improved the fits to proton (W2>7 GeV2),deuteron, 4He, 12C, 27Al, and 56Fe (covering the full 12 GeV kinematics). For 3He, all the physics components in the fit scale very wellwith A but the Fermi momentum parameters has not been set to a reasonable values (plan to update the fit soon). 
 
 Please send questions Zhiwen Zhao (zwzhao@jlab.org), Ye Tian (tainye@jlab.org)
 
 ==== log =================================
+2023/9/8 modified by Ye Tian and pushed it as the commit d4898a1 
+1)modified evgen_inclusive_e.cxx to thow events based on random costheta rather than theta (because in the calculate_fixed_target_xs function, the cross sections are calcualted based on costheta). 
+**the corresponding change of the PVDIS rate could increase the uncertainties of the submiited proposal that used the previous eAll generator (10-20 %).    
+2)added a deg_to_rad factor in the ./include/constants.h file. 
+
 2021/03/16 modified by Jixie Zhang
 1) Add energy loss calculation routines: PVDIS::CalELoss_electron(beam, vz)
 2) After Ep generated flatly in range (0,beam), 
