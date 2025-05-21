@@ -10,7 +10,7 @@ unpol_pdfset_ID       0000
 # target settings 
 tgt_Z                 1     
 tgt_A                 1 
-# luminosity  
+# nuclear luminosity  
 lumi                  1.2E+37
 # kinematics  
 E_beam                11   
@@ -25,10 +25,12 @@ vy_min               -0.25
 vy_max                0.25        
 vz_min               -322.50       
 vz_max               -307.50     
-# scale factor apply
-scale                 1   
+# Fit model 9: Christy-bosted 2009 Fit; 21: Christy 2021 Fit 
+Fit_model            21 
+# scale factor apply to fit mode 9 only
+scale                 0   
 # Radiative  switch, 0 off, 1/2 on with/without vertex smearing
-rad                   1   
+rad                   0  
 # Radiative length of target
 RL                    1.7e-2
 # Radiative length before target
@@ -37,4 +39,4 @@ RLb                   1.35e-3
 RLa                   0.85e-2
 # Integration threshold set up for radiation corrections 0 for kElastic, 1 for kPion, and 2 for kQuasi-free
 ThreshType           0 
-#refer to https://solid.jlab.org/wiki/index.php/Full_simulation_and_file_sharing#luminosity_and_radiation_thickness
+# for target info, please refer to https://solid.jlab.org/wiki/index.php/Full_simulation_and_file_sharing#luminosity_and_radiation_thickness
