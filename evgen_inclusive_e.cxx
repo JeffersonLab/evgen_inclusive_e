@@ -96,7 +96,7 @@ int  main(Int_t argc, char *argv[])
 {
     if(argc<2) {
         cout<<"***Error: You need to provide at least 1 argument\n";
-        cout<<"Usage: "<<argv[0]<<" <input_file> [doIncomingEloss=1] [doRadiateBornXS=1]\n";
+        cout<<"Usage: "<<argv[0]<<" <input_file> [doIncomingEloss] [doRadiateBornXS]\n";
         exit(-1);
     }
     char input_gen_file[250];
@@ -410,8 +410,8 @@ int  main(Int_t argc, char *argv[])
             //By Jixie: use the Ei to calculate XS now 
             //But still use beam to do the scaling since the scale factor is determined using the norminal beam
             xs=calculate_fixed_target_xs( Ei,  Z,  A,  theta,  Ep,  unpol_pdf, Fit_model);   //theta unit in degree
-            if(scale_status==1){
-                factor=0.906-0.00699*E;
+            if(Fit_model==9 && scale_status==1){
+                factor=0.906-0.00699*E; // According to David Flay,this factor is needed when using F1F2_09 fit to compare to data
             }else{
                 factor=1.0;
             }
