@@ -1,7 +1,7 @@
-#here are default installations in container
+#here are default instllations on ifarm1901
 
 #use root
-setenv ROOTSYS /evgen/root/root_v5.34.36.Linux-centos7-x86_64-gcc4.8
+setenv ROOTSYS /group/solid/apps/root/root_v5.34.36.Linux-centos7-x86_64-gcc4.8
 setenv PATH ${ROOTSYS}/bin:${PATH}
 if (!($?LD_LIBRARY_PATH)) then
   setenv LD_LIBRARY_PATH ${ROOTSYS}/lib
@@ -10,11 +10,13 @@ else
 endif
 
 #using LHAPDF6
-setenv LHAPDF /evgen/LHAPDF/LHAPDF-6.1.6
+setenv LHAPDF /group/solid/apps/evgen/LHAPDF/LHAPDF-6.1.6
+#setenv LHAPDF /group/solid/apps/evgen/LHAPDF/LHAPDF-6.3.0
 setenv LD_LIBRARY_PATH ${LHAPDF}/lib:${LD_LIBRARY_PATH}
 setenv LHAPDF_DATA_PATH ${LHAPDF}/share/LHAPDF
 #setenv LHAPDF_DATA_PATH /cvmfs/sft.cern.ch/lcg/external/lhapdfsets/current
 
 
-
+#use cmake 3.19.4
+setenv PATH /apps/cmake/3.19.4/bin:${PATH}
 

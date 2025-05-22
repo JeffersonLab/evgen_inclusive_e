@@ -15,23 +15,25 @@ Please send questions Zhiwen Zhao (zwzhao@jlab.org), Ye Tian (tainye@jlab.org)
 
 # how to run it 
 --------------------
-refer to how to run it in the container at jlab ifarm 
+refer to how to run pre-compiled version in the container at jlab ifarm 
 https://github.com/JeffersonLab/solid_release/blob/master/howto_evgen.md
 
-> source setup
+general running instruction as follows, don't use this
+> source setup (for the container only)
 >./evgen_inclusive_e <input_file> [doIncomingEloss] [doRadiateBornXS]
+
+a root file and a txt file in lund format will be produced in the current directory
 
 see inputfile examples under input dir
 the main parameters are as follows:
-* model 21 with 2021 fit, model 9 with 2009 fit + pdf
+* num_evt: number of trial events thrown evenly in costheta,phi,P space. only physical events in 0<x_bj<1 will be kept. thus output events are less than this
+* Fit_model: 21 with 2021 fit, 9 with 2009 fit + pdf
 * rad: 0 Born cross section only; 1:unpolarized radiative cross section with vertex z smearing; 2:unpolarized radiative cross section without vertex z smearing
-* scale, 0 for without, 1 for with additional correction for F1F2_09 fit only, according to David Flay
+* scale: 0 for without, 1 for with additional correction (0.906-0.00699*E) for F1F2_09 fit only, according to David Flay, it's need to compare to data
 * ThreshType, Integration threshold set up for radiation corrections 0 for kElastic, 1 for kPion, and 2 for kQuasi-free
 the optional command line options are
 * doIncomingEloss=1 will turn on Eloss for beam before vertex, default is 0
 * doRadiateBornXS=0 will turn rad off by ignoring input file, default is 1
-
-a root file and a txt file in lund format will be produced in the current directory
 
 # how to analyze output 
 --------------------
@@ -39,33 +41,42 @@ setup env at ifarm
 module use /group/halla/modulefiles
 module load root/6.32.08
 
-plot eAll distribution with and without SoLID acceptance
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_He3_11GeV_1e6_theta5-35deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_He3/201701_24GeV/acceptance_solid_SIDIS_He3_electron_1e7_201701_output_final.root",11)'
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_He3_8.8GeV_1e6_theta5-35deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_He3/201701_24GeV/acceptance_solid_SIDIS_He3_electron_1e7_201701_output_final.root",8.8)'
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_He3_22GeV_1e6_theta5-35deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_He3/201701_24GeV/acceptance_solid_SIDIS_He3_electron_1e7_201701_output_final.root",22)'
+some output at /work/halla/solid/evgen/evgen_inclusive_e/
 
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_NH3_11GeV_1e6_theta3-90deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_NH3/202012_24GeV/acceptance_solid_SIDIS_NH3_24GeV_electron_1e7_202012_output_final.root",11)'
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_NH3_8.8GeV_1e6_theta3-90deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_NH3/202012_24GeV/acceptance_solid_SIDIS_NH3_24GeV_electron_1e7_202012_output_final.root",8.8)'
-> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0acacfe_20230908/eAll_solid_SIDIS_NH3_22GeV_1e6_theta3-90deg_fit21_rad0.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_NH3/202012_24GeV/acceptance_solid_SIDIS_NH3_24GeV_electron_1e7_202012_output_final.root",22)'
+* plot eAll distribution with and without SoLID acceptance
+> root 'analysis_eAll.C("eDIS_rootfile","acceptance_rootfile",beam_energy)'
+> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0a256eb_20250521/eAll_solid_SIDIS_He3_11GeV_theta5-35deg_fit21_rad0_1e6.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_He3/201701_24GeV/acceptance_solid_SIDIS_He3_electron_1e7_201701_output_final.root",11)'
+> root 'analysis_eAll.C("/work/halla/solid/evgen/evgen_inclusive_e/commit0a256eb_20250521/eAll_solid_SIDIS_NH3_11GeV_theta3-90deg_fit21_rad0_5e6.root","/group/solid/solid_github/JeffersonLab/solid_gemc/analysis/acceptance/result_SIDIS_NH3/202012_24GeV/acceptance_solid_SIDIS_NH3_24GeV_electron_1e7_202012_output_final.root",11)'
 
-compare this generator, nicked named "eAll", and "eDIS" generator (https://github.com/JeffersonLab/evgen_inclusive)
+ config                                   rate gen(khz)      rate accepted from both FA and LA(khz)
+ solid_SIDIS_He3_8.8GeV_theta5-35deg      1165             185        
+ solid_SIDIS_He3_11GeV_theta5-35deg       792              118
+ solid_SIDIS_He3_22GeV_theta5-35deg       226              25
+ solid_SIDIS_NH3_8.8GeV_theta3-90deg      565              2.7        
+ solid_SIDIS_NH3_11GeV_theta3-90deg       379              1.75
+ solid_SIDIS_NH3_22GeV_theta3-90deg       114              0.44
+
+* compare this generator, nicked named "eAll", and "eDIS" generator (https://github.com/JeffersonLab/evgen_inclusive)
 > root 'compare_eDIS_eAll.C("eDIS_rootfile","eAll_rootfile")'
 
-compare rad and norad
+* compare rad and norad
 > root analysis_rad_norad_2D_plot.C
 
 # log of major changes 
 --------------------
+2025/5/21 commit 2f12a68
+let scale only apply to model 9 and ignore it for fit model 21, by Zhiwen Zhao
+
 2023/9/8 commit d4898a1 
 fix normalization bug by Ye Tian 
 modified evgen_inclusive_e.cxx to throw events based on random costheta rather than theta (because in the calculate_fixed_target_xs function, the cross sections are calcualted based on costheta). 
 **the corresponding change of the PVDIS rate could increase the uncertainties of the submited proposal that used the previous eAll generator (10-20 %).
 
 2022/05/25 commit 6fc41a0
-add ThreshType option for radiative correction by Ye Tian
+add ThreshType option for radiative correction to speed up calculation, by Ye Tian
 
 2021/04/06 commit 4bb274c
-add fit2021 (model 21) in additional to old fit2009 (model 9) by Ye Tian and add beam energy after external rad in output by Jixie Zhang
+finished adding F1F2 fit 2021 (model 21) in additional to old F1F2 fit 2009 (model 9) by Ye Tian and add beam energy after external rad in output by Jixie Zhang
 
 2021/03/16 commit 2972a2e
 modified by Jixie Zhang 
